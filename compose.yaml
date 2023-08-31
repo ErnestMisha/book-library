@@ -1,0 +1,9 @@
+services:
+  mysql:
+    image: mysql:8.1.0
+    env_file:
+      - .env
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+    ports:
+      - ${MYSQL_PORT}:33060
