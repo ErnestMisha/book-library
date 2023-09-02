@@ -19,4 +19,4 @@ docker compose up -d
 
 ## Start app
 
-To start app, use command scripts available in [package.json](package.json#L10) file, remember to run migrations first.
+To start app, use command scripts available in [package.json](package.json#L10) file.
