@@ -11,6 +11,12 @@ dependencies:
   '@fastify/sensible':
     specifier: ^5.0.0
     version: 5.2.0
+  '@mysql/xdevapi':
+    specifier: ^8.0.33
+    version: 8.0.33
+  dotenv:
+    specifier: ^16.3.1
+    version: 16.3.1
   fastify:
     specifier: ^4.0.0
     version: 4.22.0
@@ -22,6 +28,9 @@ dependencies:
     version: 4.5.1
 
 devDependencies:
+  '@types/node':
+    specifier: ^20.5.7
+    version: 20.5.7
   c8:
     specifier: ^7.13.0
     version: 7.14.0
@@ -320,8 +329,21 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@mysql/xdevapi@8.0.33:
+    resolution: {integrity: sha512-SXy+1CMtTb6qyKo/vzj/krWU4Ui6PnEtkkUjwdLpVdxkt0noZdDMmoGUxtMsm+Y2l15tme1MVuYvxMK7RJVfEA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      google-protobuf: 3.19.4
+      lossless-json: 2.0.1
+      parsimmon: 1.18.1
+    dev: false
+
   /@types/istanbul-lib-coverage@2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
+    dev: true
+
+  /@types/node@20.5.7:
+    resolution: {integrity: sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==}
     dev: true
 
   /abort-controller@3.0.0:
@@ -976,6 +998,10 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /google-protobuf@3.19.4:
+    resolution: {integrity: sha512-OIPNCxsG2lkIvf+P5FNfJ/Km95CsXOBecS9ZcAU6m2Rq3svc0Apl9nB3GMDNKfQ9asNv4KjyAqGwPQFrVle3Yg==}
+    dev: false
+
   /graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: true
@@ -1258,6 +1284,10 @@ packages:
     resolution: {integrity: sha512-uHaJFihxmJcEX3kT4I23ABqKKalJ/zDrDg0lsFtc1h+3uw49SIJ5beyhx5ExVRti3AvKoOJngIj7xz3oylPdWQ==}
     dev: true
 
+  /lossless-json@2.0.1:
+    resolution: {integrity: sha512-KW/FSL426qblKVvf4ImeMVGr0Je6J9aXvAMUOIU8AzelDj06q47mn6QJ+56lBBd+A8kjrncrxdKQs6ZssAXTmw==}
+    dev: false
+
   /lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
     dependencies:
@@ -1477,6 +1507,10 @@ packages:
       lodash.flattendeep: 4.4.0
       release-zalgo: 1.0.0
     dev: true
+
+  /parsimmon@1.18.1:
+    resolution: {integrity: sha512-u7p959wLfGAhJpSDJVYXoyMCXWYwHia78HhRBWqk7AIbxdmlrfdp5wX0l3xv/iTSH5HvhN9K7o26hwwpgS5Nmw==}
+    dev: false
 
   /path-exists@3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
