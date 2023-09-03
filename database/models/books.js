@@ -33,4 +33,15 @@ export class Books {
 
     await session.close();
   }
+
+  static async listBooks() {
+    const session = await this.#dbClient.getSession();
+    const books = session.getDefaultSchema().getCollection(this.#collection);
+
+    const queryRes = await books.find().fields("isbn").execute();
+
+    await session.close();
+
+    return queryRes.fetchAll();
+  }
 }
