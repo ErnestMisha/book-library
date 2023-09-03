@@ -64,7 +64,7 @@ export const books = [
   },
   {
     title: `Docker: Up & Running: Shipping Reliable Containers in Production `,
-    authors: ["Sean Kane", " Karl Matthias"],
+    authors: ["Sean Kane", "Karl Matthias"],
     isbn: "978-1098131821",
     edition: 3,
     length: 422,
@@ -73,7 +73,7 @@ export const books = [
   },
   {
     title: `Pro Git`,
-    authors: ["Scott Chacon", "Ben Straub "],
+    authors: ["Scott Chacon", "Ben Straub"],
     isbn: "978-1484200773",
     edition: 2,
     length: 521,
