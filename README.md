@@ -20,3 +20,7 @@ docker compose up -d
 ## Start app
 
 To start app, use command scripts available in [package.json](package.json#L10) file.
+
+## Endpoints documentation
+
+Documentation using `swagger-ui` is available at `/documentation` endpoint.
