@@ -44,4 +44,28 @@ export class Books {
 
     return queryRes.fetchAll();
   }
+
+  static async getBook(isbn) {
+    const session = await this.#dbClient.getSession();
+    const books = session.getDefaultSchema().getCollection(this.#collection);
+
+    const queryRes = await books
+      .find(`isbn = :isbn`)
+      .bind("isbn", isbn)
+      .fields(
+        "title",
+        "authors",
+        "isbn",
+        "edition",
+        "length",
+        "totalAmount",
+        "available"
+      )
+      .limit(1)
+      .execute();
+
+    await session.close();
+
+    return queryRes.fetchOne();
+  }
 }
