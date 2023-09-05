@@ -37,7 +37,6 @@ export class Books {
   static async listBooks() {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
-
     const queryRes = await books.find().fields("isbn").execute();
 
     await session.close();
@@ -48,7 +47,6 @@ export class Books {
   static async getBook(isbn) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
-
     const queryRes = await books
       .find(`isbn = :isbn`)
       .bind("isbn", isbn)
@@ -67,5 +65,33 @@ export class Books {
     await session.close();
 
     return queryRes.fetchOne();
+  }
+
+  static async createBook(book) {
+    const session = await this.#dbClient.getSession();
+    const books = session.getDefaultSchema().getCollection(this.#collection);
+
+    await books.add(book).execute();
+    await session.close();
+  }
+
+  static async updateBook(isbn, available) {
+    const session = await this.#dbClient.getSession();
+    const books = session.getDefaultSchema().getCollection(this.#collection);
+
+    await books
+      .modify("isbn = :isbn")
+      .set("available", available)
+      .bind("isbn", isbn)
+      .execute();
+    await session.close();
+  }
+
+  static async deleteBook(isbn) {
+    const session = await this.#dbClient.getSession();
+    const books = session.getDefaultSchema().getCollection(this.#collection);
+
+    await books.remove("isbn = :isbn").bind("isbn", isbn).execute();
+    await session.close();
   }
 }
