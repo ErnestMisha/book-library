@@ -1,6 +1,6 @@
-# Book library REST API app
+# Book library
 
-This app was created for learning purposes. It's built using `mySQL` as a document store along with `X Dev Api` and `fastify` framework as a server.
+App for managing books in library.
 
 ## Prerequisites
 
