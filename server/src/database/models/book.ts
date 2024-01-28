@@ -1,12 +1,12 @@
-import { getClient } from "@mysql/xdevapi";
-import { config } from "../../config.js";
+import { CollectionDocuments, getClient } from "@mysql/xdevapi";
+import { config } from "../../config";
 
-export class Books {
+export class Book {
   static #dbClient = getClient({
     schema: config.mysqlDb,
-    user: config.mysqlUser,
+    user: config.mysqlUser || "",
     password: config.mysqlPass,
-    port: config.mysqlPort,
+    port: Number(config.mysqlPort),
   });
 
   static #collection = "books";
@@ -15,14 +15,14 @@ export class Books {
     const session = await this.#dbClient.getSession();
     const schema = session.getDefaultSchema();
 
-    const books = await schema.createCollection(this.#collection, {
+    await schema.createCollection(this.#collection, {
       reuseExisting: true,
     });
 
     await session.close();
   }
 
-  static async seedData(data) {
+  static async seedData(data: CollectionDocuments) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
     const count = await books.count();
@@ -44,7 +44,7 @@ export class Books {
     return queryRes.fetchAll();
   }
 
-  static async getBook(isbn) {
+  static async getBook(isbn: string) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
     const queryRes = await books
@@ -67,7 +67,7 @@ export class Books {
     return queryRes.fetchOne();
   }
 
-  static async createBook(book) {
+  static async createBook(book: CollectionDocuments) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 
@@ -75,7 +75,7 @@ export class Books {
     await session.close();
   }
 
-  static async updateBook(isbn, available) {
+  static async updateBook(isbn: string, available: boolean) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 
@@ -87,7 +87,7 @@ export class Books {
     await session.close();
   }
 
-  static async deleteBook(isbn) {
+  static async deleteBook(isbn: string) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 

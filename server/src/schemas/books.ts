@@ -51,6 +51,7 @@ export const createBookSchema = {
   additionalProperties: false,
   body: {
     type: "object",
+    required: ["title", "isbn", "authors"],
     properties: {
       title: { type: "string" },
       isbn: { type: "string" },
