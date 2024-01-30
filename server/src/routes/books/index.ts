@@ -1,19 +1,19 @@
-import { FastifyPluginAsync } from "fastify";
-import { Book } from "../../database";
+import { FastifyPluginAsync } from 'fastify';
+import { Book } from '../../database';
 import {
   listBooksSchema,
   getBookSchema,
   createBookSchema,
   updateBookSchema,
-  deleteBookSchema,
-} from "../../schemas";
-import { CollectionDocuments } from "@mysql/xdevapi";
+  deleteBookSchema
+} from '../../schemas';
+import { CollectionDocuments } from '@mysql/xdevapi';
 
 const books: FastifyPluginAsync = async (fastify, opts) => {
   fastify.get(
-    "/",
+    '/',
     {
-      schema: listBooksSchema,
+      schema: listBooksSchema
     },
     async () => {
       return Book.listBooks();
@@ -21,9 +21,9 @@ const books: FastifyPluginAsync = async (fastify, opts) => {
   );
 
   fastify.get<{ Params: { isbn: string } }>(
-    "/:isbn",
+    '/:isbn',
     {
-      schema: getBookSchema,
+      schema: getBookSchema
     },
     async (request, reply) => {
       const book = await Book.getBook(request.params.isbn);
@@ -37,9 +37,9 @@ const books: FastifyPluginAsync = async (fastify, opts) => {
   );
 
   fastify.post<{ Body: CollectionDocuments & { isbn: string } }>(
-    "/",
+    '/',
     {
-      schema: createBookSchema,
+      schema: createBookSchema
     },
     async function (request) {
       await Book.createBook(request.body);
@@ -51,14 +51,14 @@ const books: FastifyPluginAsync = async (fastify, opts) => {
   fastify.patch<{
     Params: { isbn: string };
     Body: { available: boolean };
-  }>("/:isbn", { schema: updateBookSchema }, async function (request) {
+  }>('/:isbn', { schema: updateBookSchema }, async function (request) {
     await Book.updateBook(request.params.isbn, request.body.available);
 
     return { isbn: request.params.isbn };
   });
 
   fastify.delete<{ Params: { isbn: string } }>(
-    "/:isbn",
+    '/:isbn',
     { schema: deleteBookSchema },
     async function (request) {
       await Book.deleteBook(request.params.isbn);

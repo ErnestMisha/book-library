@@ -1,22 +1,22 @@
-import { CollectionDocuments, getClient } from "@mysql/xdevapi";
-import { config } from "../../config";
+import { CollectionDocuments, getClient } from '@mysql/xdevapi';
+import { config } from '../../config';
 
 export class Book {
   static #dbClient = getClient({
     schema: config.mysqlDb,
-    user: config.mysqlUser || "",
+    user: config.mysqlUser || '',
     password: config.mysqlPass,
-    port: Number(config.mysqlPort),
+    port: Number(config.mysqlPort)
   });
 
-  static #collection = "books";
+  static #collection = 'books';
 
   static async createCollection() {
     const session = await this.#dbClient.getSession();
     const schema = session.getDefaultSchema();
 
     await schema.createCollection(this.#collection, {
-      reuseExisting: true,
+      reuseExisting: true
     });
 
     await session.close();
@@ -37,7 +37,7 @@ export class Book {
   static async listBooks() {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
-    const queryRes = await books.find().fields("isbn").execute();
+    const queryRes = await books.find().fields('isbn').execute();
 
     await session.close();
 
@@ -49,16 +49,8 @@ export class Book {
     const books = session.getDefaultSchema().getCollection(this.#collection);
     const queryRes = await books
       .find(`isbn = :isbn`)
-      .bind("isbn", isbn)
-      .fields(
-        "title",
-        "authors",
-        "isbn",
-        "edition",
-        "length",
-        "totalAmount",
-        "available"
-      )
+      .bind('isbn', isbn)
+      .fields('title', 'authors', 'isbn', 'edition', 'length', 'totalAmount', 'available')
       .limit(1)
       .execute();
 
@@ -79,11 +71,7 @@ export class Book {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 
-    await books
-      .modify("isbn = :isbn")
-      .set("available", available)
-      .bind("isbn", isbn)
-      .execute();
+    await books.modify('isbn = :isbn').set('available', available).bind('isbn', isbn).execute();
     await session.close();
   }
 
@@ -91,7 +79,7 @@ export class Book {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 
-    await books.remove("isbn = :isbn").bind("isbn", isbn).execute();
+    await books.remove('isbn = :isbn').bind('isbn', isbn).execute();
     await session.close();
   }
 }

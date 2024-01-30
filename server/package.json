@@ -12,7 +12,9 @@
     "build:ts": "tsc",
     "watch:ts": "tsc -w",
     "dev": "npm run build:ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
-    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"
+    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
+    "lint": "eslint src/ --fix",
+    "format": "prettier --write src/"
   },
   "keywords": [],
   "author": "",
@@ -29,9 +31,7 @@
   "devDependencies": {
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^2.1.0",
-    "@types/node": "^20.11.8",
     "concurrently": "^8.2.2",
-    "fastify-tsconfig": "^2.0.0",
-    "typescript": "^5.3.3"
+    "fastify-tsconfig": "^2.0.0"
   }
 }
