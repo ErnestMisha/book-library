@@ -23,4 +23,4 @@ To start app, use command scripts available in [package.json](package.json#L10) 
 
 ## Endpoints documentation
 
-Documentation using `swagger-ui` is available at `/documentation` endpoint.
+Documentation using `swagger-ui` is available at [http://localhost:3000/documentation](http://localhost:3000/documentation) endpoint.

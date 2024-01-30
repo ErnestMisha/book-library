@@ -6,4 +6,4 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
     ports:
-      - ${MYSQL_PORT}:33060
+      - 33060:33060
