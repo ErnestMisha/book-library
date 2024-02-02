@@ -1,17 +1,25 @@
 <script setup lang="ts">
+import Header from './components/layout/Header.vue';
 import { ref } from 'vue';
 
-const count = ref(0);
+const theme = ref<'light' | 'dark'>('light');
+
+if (localStorage.theme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  theme.value = 'dark';
+} else {
+  theme.value = 'light';
+}
+
+function changeTheme() {
+  theme.value = theme.value == 'light' ? 'dark' : 'light';
+}
 </script>
 
 <template>
-  <section class="flex min-h-screen flex-col items-center justify-center space-y-8 bg-black">
-    <h1 class="text-4xl text-amber-400">Coming soon...</h1>
-    <button
-      class="rounded-lg border border-rose-300 bg-red-400 p-2 hover:bg-orange-400 active:bg-yellow-400"
-      @click="count++"
-    >
-      Counter: {{ count }}
-    </button>
-  </section>
+  <div :class="theme">
+    <article class="min-h-dvh bg-orange-100 p-4 lg:p-6 dark:bg-stone-700">
+      <Header :theme="theme" @change-theme="changeTheme" />
+      <div class="mt-72 text-center"><i class="pi pi-cog pi-spin text-4xl text-lime-500" /></div>
+    </article>
+  </div>
 </template>
