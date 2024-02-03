@@ -7,7 +7,7 @@ import {
   updateBookSchema,
   deleteBookSchema
 } from '../../schemas';
-import { CollectionDocuments } from '@mysql/xdevapi';
+import { Book as BookType } from '@book-library/shared/types';
 
 const books: FastifyPluginAsync = async (fastify, opts) => {
   fastify.get(
@@ -36,7 +36,7 @@ const books: FastifyPluginAsync = async (fastify, opts) => {
     }
   );
 
-  fastify.post<{ Body: CollectionDocuments & { isbn: string } }>(
+  fastify.post<{ Body: BookType & { isbn: string } }>(
     '/',
     {
       schema: createBookSchema

@@ -1,14 +1,10 @@
 import { join } from 'path';
-import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
-import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
+import AutoLoad from '@fastify/autoload';
+import { FastifyPluginAsync } from 'fastify';
 import { books, Book } from './database';
 import { config } from './config';
 
-export interface AppOptions extends FastifyServerOptions, Partial<AutoloadPluginOptions> {}
-// Pass --options via CLI arguments in command to enable these options.
-const options: AppOptions = {};
-
-const app: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void> => {
+export const app: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   // Place here your custom code!
   if (config.environment === 'development') {
     await Book.createCollection();
@@ -31,6 +27,3 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void>
     options: opts
   });
 };
-
-export default app;
-export { app, options };
