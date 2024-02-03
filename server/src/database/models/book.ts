@@ -1,12 +1,13 @@
-import { CollectionDocuments, getClient } from '@mysql/xdevapi';
+import { getClient } from '@mysql/xdevapi';
 import { config } from '../../config';
+import { Book as BookType } from '@book-library/shared/types';
 
 export class Book {
   static #dbClient = getClient({
     schema: config.mysqlDb,
-    user: config.mysqlUser || '',
+    user: config.mysqlUser,
     password: config.mysqlPass,
-    port: Number(config.mysqlPort)
+    port: config.mysqlPort
   });
 
   static #collection = 'books';
@@ -22,7 +23,7 @@ export class Book {
     await session.close();
   }
 
-  static async seedData(data: CollectionDocuments) {
+  static async seedData(data: BookType[]) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
     const count = await books.count();
@@ -41,7 +42,7 @@ export class Book {
 
     await session.close();
 
-    return queryRes.fetchAll();
+    return queryRes.fetchAll() as BookType[];
   }
 
   static async getBook(isbn: string) {
@@ -56,10 +57,10 @@ export class Book {
 
     await session.close();
 
-    return queryRes.fetchOne();
+    return queryRes.fetchOne() as BookType;
   }
 
-  static async createBook(book: CollectionDocuments) {
+  static async createBook(book: BookType) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 

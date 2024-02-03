@@ -1,4 +1,6 @@
-export const books = [
+import { Book } from '@book-library/shared/types';
+
+export const books: Book[] = [
   {
     title: `JavaScript: The Definitive Guide: Master the World's Most-Used Programming Language`,
     authors: ['David Flanagan'],

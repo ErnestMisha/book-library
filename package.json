@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "app for managing books in library",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm --stream -r dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format"
   },
   "keywords": [],
   "author": "",

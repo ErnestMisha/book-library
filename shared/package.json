@@ -1,0 +1,12 @@
+{
+  "name": "@book-library/shared",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint --fix types/",
+    "format": "prettier --write types/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
