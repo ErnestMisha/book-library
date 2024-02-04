@@ -20,7 +20,8 @@ const closeListeners = closeWithGrace({ delay: config.forceShutdownDelay }, asyn
   await server.close();
 } as closeWithGrace.CloseWithGraceAsyncCallback);
 
-server.addHook('onClose', async (instance) => {
+server.addHook('onClose', async (instance) => 
+{
   closeListeners.uninstall();
 });
 server.register(app);
