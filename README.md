@@ -12,7 +12,7 @@ You must have following software installed on your machine:
 
 ## Repository structure
 
-This repository is structured as a monorepo, thanks to pnpm workspace feature. It constits of three main parts:
+This repository is structured as a monorepo, thanks to pnpm workspace feature. It consists of three main parts:
 
 - [server](server/README.md)
 - [browser](browser/README.md)
@@ -28,7 +28,7 @@ docker compose up -d
 
 ## Start app
 
-To start app, use command scripts available in [package.json](package.json#L10) file.
+To start app, use command scripts available in [package.json](package.json#L5) file.
 
 ## Endpoints documentation
 
