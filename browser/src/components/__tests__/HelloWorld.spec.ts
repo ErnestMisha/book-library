@@ -8,3 +8,5 @@ describe('HelloWorld', () => {
     expect(wrapper.text()).toContain('Hello Vitest');
   });
 });
+
+// linter should fail here
