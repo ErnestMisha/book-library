@@ -4,10 +4,19 @@ App for managing books in library.
 
 ## Prerequisites
 
-You should have following software installed on your machine:
+You must have following software installed on your machine:
 
 - [docker](https://docs.docker.com/engine/install/)
-- [node.js](https://nodejs.org/en) (preferably using [volta](https://docs.volta.sh/guide/getting-started))
+- [node.js](https://nodejs.org/en)
+- [pnpm](https://pnpm.io/installation)
+
+## Repository structure
+
+This repository is structured as a monorepo, thanks to pnpm workspace feature. It constits of three main parts:
+
+- [server](server/README.md)
+- [browser](browser/README.md)
+- [shared](shared/README.md)
 
 ## Before start
 
