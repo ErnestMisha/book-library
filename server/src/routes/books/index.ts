@@ -1,69 +1,48 @@
 import { FastifyPluginAsync } from 'fastify';
 import { Book } from '../../database';
-import {
-  listBooksSchema,
-  getBookSchema,
-  createBookSchema,
-  updateBookSchema,
-  deleteBookSchema
-} from '../../schemas';
-import { Book as BookType } from '@book-library/shared/types';
+import { booksSchema } from '../../schemas';
+import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 const books: FastifyPluginAsync = async (fastify, opts) => {
-  fastify.get(
-    '/',
-    {
-      schema: listBooksSchema
-    },
-    async () => {
-      return Book.listBooks();
-    }
-  );
+  fastify.withTypeProvider<ZodTypeProvider>().get('/', booksSchema.list, (req, rep) => {
+    return Book.listBooks();
+  });
 
-  fastify.get<{ Params: { isbn: string } }>(
-    '/:isbn',
-    {
-      schema: getBookSchema
-    },
-    async (request, reply) => {
-      const book = await Book.getBook(request.params.isbn);
+  fastify
+    .withTypeProvider<ZodTypeProvider>()
+    .get('/:isbn', booksSchema.get, async (request, reply) => {
+      const book = await Book.getBook(Number(request.params.isbn));
 
       if (!book) {
         return reply.notFound();
       }
 
       return book;
-    }
-  );
+    });
 
-  fastify.post<{ Body: BookType & { isbn: string } }>(
-    '/',
-    {
-      schema: createBookSchema
-    },
-    async function (request) {
+  fastify
+    .withTypeProvider<ZodTypeProvider>()
+    .post('/', booksSchema.create, async function (request) {
       await Book.createBook(request.body);
 
       return { isbn: request.body.isbn };
-    }
-  );
+    });
 
-  fastify.patch<{
-    Params: { isbn: string };
-    Body: { available: boolean };
-  }>('/:isbn', { schema: updateBookSchema }, async function (request) {
-    await Book.updateBook(request.params.isbn, request.body.available);
+  fastify
+    .withTypeProvider<ZodTypeProvider>()
+    .patch('/:isbn', booksSchema.update, async function (request) {
+      const isbn = Number(request.params.isbn);
 
-    return { isbn: request.params.isbn };
-  });
+      await Book.updateBook(isbn, request.body.availableCount);
 
-  fastify.delete<{ Params: { isbn: string } }>(
-    '/:isbn',
-    { schema: deleteBookSchema },
-    async function (request) {
-      await Book.deleteBook(request.params.isbn);
-    }
-  );
+      return { isbn };
+    });
+
+  fastify
+    .withTypeProvider<ZodTypeProvider>()
+    .delete('/:isbn', booksSchema.delete, async function (request) {
+      await Book.deleteBook(Number(request.params.isbn));
+    });
 };
 
 export default books;

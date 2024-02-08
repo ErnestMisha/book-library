@@ -25,7 +25,8 @@
     "close-with-grace": "^1.2.0",
     "dotenv": "^16.4.1",
     "fastify": "^4.25.2",
-    "fastify-plugin": "^4.5.1"
+    "fastify-plugin": "^4.5.1",
+    "fastify-type-provider-zod": "^1.1.9"
   },
   "devDependencies": {
     "@fastify/swagger": "^8.14.0",

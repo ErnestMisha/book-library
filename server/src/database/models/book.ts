@@ -45,13 +45,13 @@ export class Book {
     return queryRes.fetchAll() as BookType[];
   }
 
-  static async getBook(isbn: string) {
+  static async getBook(isbn: number) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
     const queryRes = await books
       .find(`isbn = :isbn`)
       .bind('isbn', isbn)
-      .fields('title', 'authors', 'isbn', 'edition', 'length', 'totalAmount', 'available')
+      .fields('title', 'authors', 'isbn', 'edition', 'length', 'totalCount', 'availableCount')
       .limit(1)
       .execute();
 
@@ -68,15 +68,19 @@ export class Book {
     await session.close();
   }
 
-  static async updateBook(isbn: string, available: boolean) {
+  static async updateBook(isbn: number, availableCount: number) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 
-    await books.modify('isbn = :isbn').set('available', available).bind('isbn', isbn).execute();
+    await books
+      .modify('isbn = :isbn')
+      .set('availableCount', availableCount)
+      .bind('isbn', isbn)
+      .execute();
     await session.close();
   }
 
-  static async deleteBook(isbn: string) {
+  static async deleteBook(isbn: number) {
     const session = await this.#dbClient.getSession();
     const books = session.getDefaultSchema().getCollection(this.#collection);
 

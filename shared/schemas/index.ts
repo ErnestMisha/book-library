@@ -3,15 +3,11 @@ import { z } from 'zod';
 const isbn = z.number().int().min(1000000000000).max(9999999999999);
 const availableCount = z.number().int().min(0).max(10000);
 
-export const getBookParams = z.object({
-  isbn
-});
-
-export const createBookBody = z
+export const bookSchema = z
   .object({
     title: z.string().min(5).max(40),
     isbn,
-    authors: z.string().min(3).max(30).array().nonempty(),
+    authors: z.string().array().nonempty(),
     edition: z.number().int().min(1).max(30),
     length: z.number().int().min(5).max(2000),
     totalCount: z.number().int().min(1).max(10000),
@@ -19,7 +15,5 @@ export const createBookBody = z
   })
   .refine(({ totalCount, availableCount }) => availableCount <= totalCount);
 
-export const updateBookParams = z.object({ isbn });
-export const updateBookBody = z.object({ availableCount });
-
-export const deleteBookParams = z.object({ isbn });
+export const updateBookSchema = z.object({ availableCount });
+export const isbnSchema = z.object({ isbn });
