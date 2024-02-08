@@ -1,9 +1,4 @@
-export type Book = {
-  title: string;
-  authors: string[];
-  isbn: string;
-  edition: number;
-  length: number;
-  totalAmount: number;
-  available: number;
-};
+import z from 'zod';
+import { bookSchema } from '../schemas';
+
+export type Book = z.infer<typeof bookSchema>;

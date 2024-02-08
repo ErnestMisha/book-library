@@ -2,12 +2,16 @@ import { config } from './config';
 import CreateServer from 'fastify';
 import closeWithGrace from 'close-with-grace';
 import { app } from './app';
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 
 const server = CreateServer({
   logger: {
     level: config.logLevel
   }
 });
+
+server.setValidatorCompiler(validatorCompiler);
+server.setSerializerCompiler(serializerCompiler);
 
 const closeListeners = closeWithGrace({ delay: config.forceShutdownDelay }, async function ({
   signal,

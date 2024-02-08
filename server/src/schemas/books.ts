@@ -1,112 +1,62 @@
-export const listBooksSchema = {
-  description: 'returns list of books isbn',
-  tags: ['books'],
-  additionalProperties: false,
-  response: {
-    200: {
-      description: 'Successful response',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          isbn: { type: 'string' }
-        }
+import { bookSchema, updateBookSchema, isbnSchema } from '@book-library/shared/schemas';
+import z from 'zod';
+
+const params = z.object({ isbn: z.string().length(13) });
+
+export const booksSchema = {
+  list: {
+    schema: {
+      description: 'returns list of books isbn',
+      tags: ['books'],
+      additionalProperties: false,
+      response: {
+        200: isbnSchema.array()
       }
     }
-  }
-};
-
-export const getBookSchema = {
-  description: 'returns book with given isbn',
-  tags: ['books'],
-  additionalProperties: false,
-  params: {
-    isbn: { type: 'string' }
   },
-  response: {
-    200: {
-      description: 'Successful response',
-      type: 'object',
-      properties: {
-        title: { type: 'string' },
-        isbn: { type: 'string' },
-        authors: {
-          type: 'array',
-          items: {
-            type: 'string'
-          }
-        },
-        edition: { type: 'number' },
-        length: { type: 'number' },
-        totalAmount: { type: 'number' },
-        available: { type: 'number' }
+  get: {
+    schema: {
+      description: 'returns book with given isbn',
+      tags: ['books'],
+      additionalProperties: false,
+      params,
+      response: {
+        200: bookSchema
       }
     }
-  }
-};
-
-export const createBookSchema = {
-  description: 'creates book',
-  tags: ['books'],
-  additionalProperties: false,
-  body: {
-    type: 'object',
-    required: ['title', 'isbn', 'authors'],
-    properties: {
-      title: { type: 'string' },
-      isbn: { type: 'string' },
-      authors: {
-        type: 'array',
-        items: {
-          type: 'string'
-        }
-      },
-      edition: { type: 'number' },
-      length: { type: 'number' },
-      totalAmount: { type: 'number' },
-      available: { type: 'number' }
-    }
   },
-  response: {
-    200: {
-      description: 'Successful response',
-      type: 'object',
-      properties: {
-        isbn: { type: 'string' }
+  create: {
+    schema: {
+      description: 'creates book',
+      tags: ['books'],
+      additionalProperties: false,
+      body: bookSchema,
+      response: {
+        200: isbnSchema
       }
     }
-  }
-};
-
-export const updateBookSchema = {
-  description: 'updates amount of available book copies for given isbn',
-  tags: ['books'],
-  additionalProperties: false,
-  body: {
-    type: 'object',
-    properties: {
-      available: { type: 'number' }
-    }
   },
-  params: {
-    isbn: { type: 'string' }
-  },
-  response: {
-    200: {
-      description: 'Successful response',
-      type: 'object',
-      properties: {
-        isbn: { type: 'string' }
+  update: {
+    schema: {
+      description: 'updates amount of available book copies for given isbn',
+      tags: ['books'],
+      additionalProperties: false,
+      body: updateBookSchema,
+      params,
+      response: {
+        200: isbnSchema
       }
     }
-  }
-};
-
-export const deleteBookSchema = {
-  description: 'deletes book with given isbn',
-  tags: ['books'],
-  additionalProperties: false,
-  params: {
-    isbn: { type: 'string' }
+  },
+  delete: {
+    schema: {
+      description: 'deletes book with given isbn',
+      tags: ['books'],
+      additionalProperties: false,
+      params,
+      response: {
+        204: z.null()
+      }
+    }
   }
 };
