@@ -27,9 +27,7 @@ export default defineConfig({
   build: {
     outDir: '../../dist/apps/browser',
     reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
+    emptyOutDir: true,
   },
 
   test: {
