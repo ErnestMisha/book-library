@@ -1,23 +1,38 @@
-import Fastify from 'fastify';
+import { config } from './config';
+import CreateServer from 'fastify';
+import closeWithGrace from 'close-with-grace';
 import { app } from './app/app';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-
-// Instantiate Fastify with some config
-const server = Fastify({
-  logger: true,
+const server = CreateServer({
+  logger: {
+    level: config.logLevel,
+  },
 });
 
-// Register your application as a normal plugin.
-server.register(app);
+server.setValidatorCompiler(validatorCompiler);
+server.setSerializerCompiler(serializerCompiler);
 
-// Start listening.
-server.listen({ port, host }, (err) => {
+const closeListeners = closeWithGrace(
+  { delay: config.forceShutdownDelay },
+  async function ({ signal, err, manual }) {
+    if (err) {
+      server.log.error(err);
+    }
+    await server.close();
+  } as closeWithGrace.CloseWithGraceAsyncCallback
+);
+
+server.addHook('onClose', async (instance) => {
+  closeListeners.uninstall();
+});
+server.register(app);
+server.listen({ port: config.appPort }, (err: Error | null, address) => {
   if (err) {
     server.log.error(err);
     process.exit(1);
-  } else {
-    console.log(`[ ready ] http://${host}:${port}`);
   }
 });

@@ -4,6 +4,6 @@ import App from './App.vue';
 describe('App', () => {
   it('renders properly', () => {
     const wrapper = mount(App, {});
-    expect(wrapper.text()).toContain('Welcome browser 👋');
+    expect(wrapper.text()).toContain('Book library');
   });
 });
