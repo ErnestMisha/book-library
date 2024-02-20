@@ -18,19 +18,19 @@ server.setSerializerCompiler(serializerCompiler);
 
 const closeListeners = closeWithGrace(
   { delay: config.forceShutdownDelay },
-  async function ({ signal, err, manual }) {
+  async function ({ err }) {
     if (err) {
       server.log.error(err);
     }
     await server.close();
-  } as closeWithGrace.CloseWithGraceAsyncCallback
+  }
 );
 
-server.addHook('onClose', async (instance) => {
+server.addHook('onClose', () => {
   closeListeners.uninstall();
 });
 server.register(app);
-server.listen({ port: config.appPort }, (err: Error | null, address) => {
+server.listen({ port: config.appPort }, (err: Error | null) => {
   if (err) {
     server.log.error(err);
     process.exit(1);

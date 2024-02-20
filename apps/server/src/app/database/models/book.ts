@@ -1,54 +1,53 @@
-import { getClient } from '@mysql/xdevapi';
+import { Collection, getClient } from '@mysql/xdevapi';
 import { config } from '../../../config';
-import { Book as BookType } from '@book-library/shared';
+import { Book } from '@book-library/shared';
 
-export class Book {
-  static #dbClient = getClient({
-    schema: config.mysqlDb,
-    user: config.mysqlUser,
-    password: config.mysqlPass,
-    port: config.mysqlPort,
-  });
+export class Books {
+  private collectionName = 'books';
+  private _collection: Collection;
 
-  static #collection = 'books';
-
-  static async createCollection() {
-    const session = await this.#dbClient.getSession();
-    const schema = session.getDefaultSchema();
-
-    await schema.createCollection(this.#collection, {
-      reuseExisting: true,
+  async connect() {
+    this._collection = await getClient({
+      schema: config.mysqlDb,
+      user: config.mysqlUser,
+      password: config.mysqlPass,
+      port: config.mysqlPort,
+    })
+      .getSession()
+      .then((session) => session.getDefaultSchema())
+      .then((schema) =>
+        schema.createCollection(this.collectionName, { reuseExisting: true })
+      );
+    await this._collection.dropIndex('isbn');
+    await this._collection.createIndex('isbn', {
+      fields: [{ field: '$.isbn', type: 'BIGINT', required: true }],
     });
-
-    await session.close();
   }
 
-  static async seedData(data: BookType[]) {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-    const count = await books.count();
-
-    if (!count) {
-      await books.add(data).execute();
+  private get collection() {
+    if (!this._collection) {
+      throw new Error('Connection not initialized, use `connect()` first !!!');
     }
 
-    await session.close();
+    return this._collection;
   }
 
-  static async listBooks() {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-    const queryRes = await books.find().fields('isbn').execute();
-
-    await session.close();
-
-    return queryRes.fetchAll() as BookType[];
+  async seedData(data: Book[]) {
+    if (!(await this.collection.count())) {
+      await this.collection.add(data).execute();
+    }
   }
 
-  static async getBook(isbn: number) {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-    const queryRes = await books
+  async listBooks() {
+    return this.collection
+      .find()
+      .fields('isbn')
+      .execute()
+      .then((res) => res.fetchAll());
+  }
+
+  async getBook(isbn: number) {
+    return this.collection
       .find(`isbn = :isbn`)
       .bind('isbn', isbn)
       .fields(
@@ -61,38 +60,28 @@ export class Book {
         'availableCount'
       )
       .limit(1)
-      .execute();
-
-    await session.close();
-
-    return queryRes.fetchOne() as BookType;
+      .execute()
+      .then((res) => res.fetchOne());
   }
 
-  static async createBook(book: BookType) {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-
-    await books.add(book).execute();
-    await session.close();
+  async createBook(book: Book) {
+    await this.collection.add(book).execute();
   }
 
-  static async updateBook(isbn: number, availableCount: number) {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-
-    await books
+  async updateBook(isbn: number, availableCount: number) {
+    return this.collection
       .modify('isbn = :isbn')
       .set('availableCount', availableCount)
       .bind('isbn', isbn)
-      .execute();
-    await session.close();
+      .execute()
+      .then((res) => res.getAffectedItemsCount());
   }
 
-  static async deleteBook(isbn: number) {
-    const session = await this.#dbClient.getSession();
-    const books = session.getDefaultSchema().getCollection(this.#collection);
-
-    await books.remove('isbn = :isbn').bind('isbn', isbn).execute();
-    await session.close();
+  async deleteBook(isbn: number) {
+    return this.collection
+      .remove('isbn = :isbn')
+      .bind('isbn', isbn)
+      .execute()
+      .then((res) => res.getAffectedItemsCount());
   }
 }
