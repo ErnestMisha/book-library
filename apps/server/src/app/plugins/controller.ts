@@ -1,10 +1,18 @@
 import fp from 'fastify-plugin';
-import { Books } from '../controllers';
+import { Books, Dto } from '../controllers';
+import { Books as Model, books } from '../database';
+import { config } from '../../config';
 import { RouteHandler } from 'fastify';
-import { Dto } from '../controllers/dto';
 
 export default fp(async (fastify, opts) => {
-  fastify.decorate('controller', new Books());
+  const model = new Model();
+  await model.connect();
+
+  if (config.environment === 'development') {
+    await model.seedData(books);
+  }
+
+  fastify.decorate('controller', new Books(model));
 });
 
 declare module 'fastify' {

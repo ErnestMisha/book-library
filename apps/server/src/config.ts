@@ -9,7 +9,7 @@ export const config = {
   mysqlUser: getEnv('MYSQL_USER'),
   mysqlPass: getEnv('MYSQL_PASSWORD'),
   mysqlDb: getEnv('MYSQL_DATABASE'),
-  mysqlPort: Number(getEnv('MYSQL_PORT'))
+  mysqlPort: Number(getEnv('MYSQL_PORT')),
 };
 
 function getEnv(name: string) {
@@ -17,5 +17,5 @@ function getEnv(name: string) {
     console.error(`Environment variable: ${name} must be set`);
     process.exit(1);
   }
-  return process.env[name] as string;
+  return process.env[name];
 }

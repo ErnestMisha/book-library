@@ -1,15 +1,9 @@
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
-import { books, Book } from './database';
-import { config } from '../config';
 
 export const app: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   // Place here your custom code!
-  if (config.environment === 'development') {
-    await Book.createCollection();
-    await Book.seedData(books);
-  }
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
