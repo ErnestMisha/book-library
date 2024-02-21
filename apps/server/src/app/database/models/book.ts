@@ -1,6 +1,6 @@
 import { Collection, getClient } from '@mysql/xdevapi';
 import { config } from '../../../config';
-import { Book } from '@book-library/shared';
+import { Book, UpdateBook } from '@book-library/shared';
 
 export class Books {
   private collectionName = 'books';
@@ -41,7 +41,7 @@ export class Books {
   async listBooks() {
     return this.collection
       .find()
-      .fields('isbn')
+      .fields('isbn', 'title', 'authors', 'edition')
       .execute()
       .then((res) => res.fetchAll());
   }
@@ -68,13 +68,18 @@ export class Books {
     await this.collection.add(book).execute();
   }
 
-  async updateBook(isbn: number, availableCount: number) {
-    return this.collection
-      .modify('isbn = :isbn')
-      .set('availableCount', availableCount)
-      .bind('isbn', isbn)
-      .execute()
-      .then((res) => res.getAffectedItemsCount());
+  async updateBook(isbn: number, book: UpdateBook) {
+    const query = this.collection.modify('isbn = :isbn').bind('isbn', isbn);
+
+    if (book.totalCount) {
+      query.set('totalCount', book.totalCount);
+    }
+
+    if (book.availableCount) {
+      query.set('availableCount', book.availableCount);
+    }
+
+    await query.execute();
   }
 
   async deleteBook(isbn: number) {

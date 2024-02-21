@@ -11,12 +11,12 @@ export type Dto = {
   };
   Create: {
     Body: z.infer<typeof booksSchema.create.schema.body>;
-    Reply: z.infer<(typeof booksSchema.create.schema.response)['200']>;
+    Reply: z.infer<(typeof booksSchema.create.schema.response)['201']>;
   };
   Update: {
     Params: z.infer<typeof booksSchema.update.schema.params>;
     Body: z.infer<typeof booksSchema.update.schema.body>;
-    Reply: z.infer<(typeof booksSchema.update.schema.response)['200']>;
+    Reply: z.infer<(typeof booksSchema.update.schema.response)['204']>;
   };
   Delete: {
     Params: z.infer<typeof booksSchema.delete.schema.params>;

@@ -1,10 +1,11 @@
-import { bookSchema, updateBookSchema } from '@book-library/shared';
+import {
+  getBookSchema,
+  updateBookSchema,
+  listBooksSchema,
+} from '@book-library/shared';
 import z from 'zod';
 
 const params = z.object({ isbn: z.string().length(13) });
-const isbnSchema = z.object({
-  isbn: z.number().int().min(1000000000000).max(9999999999999),
-});
 
 export const booksSchema = {
   list: {
@@ -13,7 +14,7 @@ export const booksSchema = {
       tags: ['books'],
       additionalProperties: false,
       response: {
-        200: isbnSchema.array(),
+        200: listBooksSchema,
       },
     },
   },
@@ -24,7 +25,7 @@ export const booksSchema = {
       additionalProperties: false,
       params,
       response: {
-        200: bookSchema,
+        200: getBookSchema,
       },
     },
   },
@@ -33,9 +34,11 @@ export const booksSchema = {
       description: 'creates book',
       tags: ['books'],
       additionalProperties: false,
-      body: bookSchema,
+      body: getBookSchema,
       response: {
-        200: isbnSchema,
+        201: z.object({
+          isbn: z.number().int().min(1000000000000).max(9999999999999),
+        }),
       },
     },
   },
@@ -47,7 +50,7 @@ export const booksSchema = {
       body: updateBookSchema,
       params,
       response: {
-        200: isbnSchema,
+        204: z.null(),
       },
     },
   },
