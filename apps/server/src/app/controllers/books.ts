@@ -22,22 +22,25 @@ export class Books {
 
     await this.model.createBook(req.body);
 
+    rep.code(201).header('Location', `/books/${req.body.isbn}`);
     return { isbn: req.body.isbn };
   };
 
   update: RouteHandler<Dto['Update']> = async (req, rep) => {
+    if (!req.body.totalCount && !req.body.availableCount) {
+      return rep.badRequest();
+    }
+
     const isbn = Number(req.params.isbn);
+    const book = await this.model.getBook(isbn);
 
-    const affectedCount = await this.model.updateBook(
-      isbn,
-      req.body.availableCount
-    );
-
-    if (!affectedCount) {
+    if (!book) {
       return rep.notFound();
     }
 
-    return { isbn };
+    await this.model.updateBook(isbn, req.body);
+
+    rep.code(204);
   };
 
   delete: RouteHandler<Dto['Delete']> = async (req, rep) => {
