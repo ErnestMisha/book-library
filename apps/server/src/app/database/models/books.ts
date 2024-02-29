@@ -33,12 +33,10 @@ export class Books {
   }
 
   async seedData(data: Book[]) {
-    if (!(await this.collection.count())) {
-      await this.collection.add(data).execute();
-    }
+    await this.collection.add(data).execute();
   }
 
-  async listBooks() {
+  async list() {
     return this.collection
       .find()
       .fields('isbn', 'title', 'authors', 'edition')
@@ -46,7 +44,7 @@ export class Books {
       .then((res) => res.fetchAll());
   }
 
-  async getBook(isbn: number) {
+  async get(isbn: number) {
     return this.collection
       .find(`isbn = :isbn`)
       .bind('isbn', isbn)
@@ -59,16 +57,15 @@ export class Books {
         'totalCount',
         'availableCount'
       )
-      .limit(1)
       .execute()
       .then((res) => res.fetchOne());
   }
 
-  async createBook(book: Book) {
+  async create(book: Book) {
     await this.collection.add(book).execute();
   }
 
-  async updateBook(isbn: number, book: UpdateBook) {
+  async update(isbn: number, book: UpdateBook) {
     const query = this.collection.modify('isbn = :isbn').bind('isbn', isbn);
 
     if (book.totalCount) {
@@ -82,7 +79,7 @@ export class Books {
     await query.execute();
   }
 
-  async deleteBook(isbn: number) {
+  async delete(isbn: number) {
     return this.collection
       .remove('isbn = :isbn')
       .bind('isbn', isbn)

@@ -1,2 +1,2 @@
 export * from './books';
-export * from './dto';
+export * from './types';

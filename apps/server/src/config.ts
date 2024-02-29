@@ -3,7 +3,6 @@ import 'dotenv/config';
 export const config = {
   environment: getEnv('NODE_ENV'),
   appPort: Number(getEnv('APP_PORT')),
-  forceShutdownDelay: Number(getEnv('FORCE_SHUTDOWN_DELAY')),
   logLevel: getEnv('LOG_LEVEL'),
 
   mysqlUser: getEnv('MYSQL_USER'),
