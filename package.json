@@ -7,9 +7,10 @@
   "type": "module",
   "dependencies": {
     "@fastify/autoload": "~5.7.1",
-    "@fastify/sensible": "~5.2.0",
+    "@fastify/sensible": "~5.5.0",
     "@mysql/xdevapi": "^8.0.35",
     "close-with-grace": "^1.2.0",
+    "dotenv": "^16.4.5",
     "fastify": "~4.13.0",
     "fastify-plugin": "~4.5.0",
     "fastify-type-provider-zod": "^1.1.9",
