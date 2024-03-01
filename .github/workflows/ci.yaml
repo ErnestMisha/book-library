@@ -13,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions
-      - run: pnpm exec format:check
+      - run: pnpm exec nx format:check
 
   lint:
     runs-on: ubuntu-latest
