@@ -13,5 +13,9 @@ runs:
         node-version: 20
         cache: 'pnpm'
     - name: Install dependencies
-      uses: nrwl/nx-set-shas@v4
+      shell: bash
       run: pnpm install --frozen-lockfile
+    - name: Prepare nx
+      uses: nrwl/nx-set-shas@v4
+      with:
+        main-branch-name: master
