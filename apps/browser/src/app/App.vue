@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Header from '../components/layout/Header.vue';
+import Header from './components/layout/Header.vue';
 import { ref } from 'vue';
 
 const theme = ref<'light' | 'dark'>('light');
