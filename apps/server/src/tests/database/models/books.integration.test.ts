@@ -66,4 +66,8 @@ suite('Books model', async () => {
 
     expect(book).toBeUndefined();
   });
+
+  it('test case', () => {
+    expect(1).toBe(1);
+  });
 });

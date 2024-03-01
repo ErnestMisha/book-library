@@ -168,4 +168,8 @@ suite('/books route', async () => {
       expect(response.statusCode).toBe(400);
     });
   });
+
+  it('test case', () => {
+    expect(1).toBe(1);
+  });
 });
