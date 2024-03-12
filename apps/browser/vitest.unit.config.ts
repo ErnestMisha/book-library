@@ -6,15 +6,10 @@ export default mergeConfig(
   commonConfig,
   defineProject({
     test: {
+      environment: 'jsdom',
       include: [
-        'src/tests/**/*integration.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        'src/tests/**/*unit.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       ],
-      poolOptions: { threads: { singleThread: true } },
-      server: {
-        deps: {
-          inline: ['@fastify/autoload'],
-        },
-      },
     },
   })
 );
