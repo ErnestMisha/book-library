@@ -1,12 +1,16 @@
 import { mount } from '@vue/test-utils';
-import App from '../app/app.vue';
+import App from '../app/App.vue';
 
 suite('App component', () => {
   vi.stubGlobal(
     'matchMedia',
     vi.fn(() => ({
       matches: false,
-    }))
+    })),
+  );
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(() => Promise.resolve({ json: vi.fn() })),
   );
 
   it('should set localStorage theme item', async () => {

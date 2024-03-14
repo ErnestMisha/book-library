@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import Header from '../../../app/components/layout/header.vue';
+import Header from '../../../app/components/layout/AppHeader.vue';
 
 suite('Header component', () => {
   it('should emit change-theme event', async () => {
