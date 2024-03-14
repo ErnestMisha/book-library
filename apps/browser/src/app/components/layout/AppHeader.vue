@@ -15,7 +15,7 @@ defineEmits(['change-theme']);
     <button
       id="theme-button"
       :class="theme == 'light' ? 'pi-moon' : 'pi-sun'"
-      class="pi ml-auto rounded-md border-lime-500 p-2 hover:border md:text-lg lg:text-xl"
+      class="pi ml-auto rounded-md p-2 outline-1 outline-lime-500 hover:outline md:text-lg lg:text-xl"
       @click="$emit('change-theme')"
     />
   </header>
