@@ -9,6 +9,6 @@ suite('Header component', () => {
 
     await wrapper.find('#theme-button').trigger('click');
 
-    expect(wrapper.emitted()).toHaveProperty('change-theme');
+    expect(wrapper.emitted()).toHaveProperty('changeTheme');
   });
 });

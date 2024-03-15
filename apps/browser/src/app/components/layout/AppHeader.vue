@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{ theme: 'light' | 'dark' }>();
-defineEmits(['change-theme']);
+defineEmits(['changeTheme']);
 </script>
 <template>
   <header
@@ -16,7 +16,7 @@ defineEmits(['change-theme']);
       id="theme-button"
       :class="theme == 'light' ? 'pi-moon' : 'pi-sun'"
       class="pi ml-auto rounded-md p-2 outline-1 outline-lime-500 hover:outline md:text-lg lg:text-xl"
-      @click="$emit('change-theme')"
+      @click="$emit('changeTheme')"
     />
   </header>
 </template>
