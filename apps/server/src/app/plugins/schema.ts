@@ -1,6 +1,5 @@
 import fp from 'fastify-plugin';
 import { booksSchema } from '../schemas';
-import { FastifySchema } from 'fastify';
 
 export default fp(async (fastify, opts) => {
   fastify.decorate('schema', booksSchema);
@@ -14,6 +13,7 @@ declare module 'fastify' {
       create: { schema: FastifySchema };
       update: { schema: FastifySchema };
       delete: { schema: FastifySchema };
+      uploadBookCover: { schema: FastifySchema };
     };
   }
 }

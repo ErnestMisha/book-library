@@ -1,6 +1,12 @@
 import { Collection, getClient } from '@mysql/xdevapi';
 import { config } from '../../../config';
-import { Book, UpdateBook } from '@book-library/shared';
+import {
+  Book,
+  UpdateBook,
+  listBooksSchema,
+  getBookSchema,
+  CreateBook,
+} from '@book-library/shared';
 
 export class Books {
   private collectionName = 'books';
@@ -16,7 +22,7 @@ export class Books {
       .getSession()
       .then((session) => session.getDefaultSchema())
       .then((schema) =>
-        schema.createCollection(this.collectionName, { reuseExisting: true })
+        schema.createCollection(this.collectionName, { reuseExisting: true }),
       );
     await this._collection.dropIndex('isbn');
     await this._collection.createIndex('isbn', {
@@ -39,7 +45,7 @@ export class Books {
   async list() {
     return this.collection
       .find()
-      .fields('isbn', 'title', 'authors', 'edition')
+      .fields(Object.keys(listBooksSchema.element.shape))
       .execute()
       .then((res) => res.fetchAll());
   }
@@ -48,20 +54,12 @@ export class Books {
     return this.collection
       .find(`isbn = :isbn`)
       .bind('isbn', isbn)
-      .fields(
-        'title',
-        'authors',
-        'isbn',
-        'edition',
-        'length',
-        'totalCount',
-        'availableCount'
-      )
+      .fields(Object.keys(getBookSchema.shape))
       .execute()
       .then((res) => res.fetchOne());
   }
 
-  async create(book: Book) {
+  async create(book: CreateBook) {
     await this.collection.add(book).execute();
   }
 
@@ -85,5 +83,22 @@ export class Books {
       .bind('isbn', isbn)
       .execute()
       .then((res) => res.getAffectedItemsCount());
+  }
+
+  async saveCoverExtension(isbn: number, extension: string) {
+    return this.collection
+      .modify('isbn = :isbn')
+      .bind('isbn', isbn)
+      .set('coverExtension', extension)
+      .execute();
+  }
+
+  async selectCoverExtension(isbn: number) {
+    return this.collection
+      .find(`isbn = :isbn`)
+      .bind('isbn', isbn)
+      .fields('coverExtension')
+      .execute()
+      .then((res) => res.fetchOne()?.coverExtension);
   }
 }

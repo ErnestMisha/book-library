@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import { bookBaseSchema, getBookSchema, updateBookSchema } from '../schemas';
+import {
+  listBooksSchema,
+  createBookSchema,
+  getBookSchema,
+  updateBookSchema,
+} from '../schemas';
 
-export type BookListElement = z.infer<typeof bookBaseSchema>;
+export type BookListElement = z.infer<typeof listBooksSchema.element>;
 export type Book = z.infer<typeof getBookSchema>;
 export type UpdateBook = z.infer<typeof updateBookSchema>;
+export type CreateBook = z.infer<typeof createBookSchema>;

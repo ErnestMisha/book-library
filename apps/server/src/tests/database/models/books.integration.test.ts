@@ -66,4 +66,20 @@ suite('Books model', async () => {
 
     expect(book).toBeUndefined();
   });
+
+  it('should save cover extension', async () => {
+    const ext = 'webp';
+
+    await model.saveCoverExtension(books[3].isbn, ext);
+
+    const book = await getBook(books[3].isbn);
+
+    expect(book.coverExtension).toBe(ext);
+  });
+
+  it('should select cover extension', async () => {
+    const ext = await model.selectCoverExtension(books[4].isbn);
+
+    expect(ext).toBe(books[4].coverExtension);
+  });
 });
