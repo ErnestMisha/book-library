@@ -4,6 +4,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { HttpErrorReplys } from '@fastify/sensible';
 import { booksSchema } from '../../app/schemas';
 import { z } from 'zod';
+import { PassThrough } from 'stream';
 
 suite('Books handlers', () => {
   const modelMock = {
@@ -12,28 +13,47 @@ suite('Books handlers', () => {
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn((isbn: number) =>
-      Boolean(books.find((book) => book.isbn === isbn))
+      Boolean(books.find((book) => book.isbn === isbn)),
     ),
+    selectCoverExtension: vi.fn(() => null),
+    saveCoverExtension: vi.fn(),
   } as unknown as Books;
-
   const reqMock = {
     params: books[0],
     body: books[0],
-  } as unknown as FastifyRequest<{
-    Params: { isbn: string };
-    Body: z.infer<typeof booksSchema.create.schema.body> &
-      z.infer<typeof booksSchema.update.schema.body>;
-  }>;
+    file() {
+      return { mimetype: 'image/webp', file: new PassThrough() };
+    },
+  } as unknown as ReqMock;
+  let repMock;
 
-  const repMock = {
-    notFound: vi.fn(() => repMock),
-    conflict: vi.fn(() => repMock),
-    code: vi.fn(() => repMock),
-    header: vi.fn(() => repMock),
-    badRequest: vi.fn(() => repMock),
-  } as unknown as FastifyReply & HttpErrorReplys;
+  const {
+    list,
+    get,
+    create,
+    update,
+    delete: remove,
+    uploadBookCover,
+  } = getHandlers(modelMock);
 
-  const { list, get, create, update, delete: remove } = getHandlers(modelMock);
+  vi.mock('stream/promises', () => ({ pipeline: vi.fn() }));
+  vi.mock('fs', () => ({
+    createWriteStream: vi.fn(),
+  }));
+  vi.mock('path', () => ({ join: vi.fn() }));
+  vi.mock('fs/promises', () => ({ rm: vi.fn(), readdir: vi.fn(() => []) }));
+
+  beforeEach(() => {
+    repMock = {
+      code: vi.fn(() => repMock),
+      header: vi.fn(),
+      notFound: vi.fn(),
+      conflict: vi.fn(),
+      badRequest: vi.fn(),
+      unsupportedMediaType: vi.fn(),
+      payloadTooLarge: vi.fn(),
+    } as unknown as FastifyReply & HttpErrorReplys;
+  });
 
   describe('list', () => {
     it('should return list of books', async () => {
@@ -67,13 +87,13 @@ suite('Books handlers', () => {
             isbn: 1234567891234,
           },
         },
-        repMock
+        repMock,
       );
 
       expect(repMock.code).toHaveBeenCalledWith(201);
       expect(repMock.header).toHaveBeenCalledWith(
         'Location',
-        `/books/1234567891234`
+        `/books/1234567891234`,
       );
       expect((res as { isbn: number }).isbn).toBe(1234567891234);
     });
@@ -92,7 +112,7 @@ suite('Books handlers', () => {
           ...reqMock,
           body: { ...reqMock.body, totalCount: 100, availableCount: 0 },
         },
-        repMock
+        repMock,
       );
 
       expect(repMock.code).toHaveBeenCalledWith(204);
@@ -108,7 +128,7 @@ suite('Books handlers', () => {
             availableCount: undefined,
           },
         },
-        repMock
+        repMock,
       );
 
       expect(repMock.badRequest).toHaveBeenCalled();
@@ -117,7 +137,7 @@ suite('Books handlers', () => {
     it('should call notFound method', async () => {
       await update(
         { ...reqMock, params: { ...reqMock.params, isbn: '123456789123' } },
-        repMock
+        repMock,
       );
 
       expect(repMock.notFound).toHaveBeenCalled();
@@ -134,10 +154,64 @@ suite('Books handlers', () => {
     it('should call notFound method', async () => {
       await remove(
         { ...reqMock, params: { ...reqMock.params, isbn: '123456789123' } },
-        repMock
+        repMock,
       );
 
       expect(repMock.notFound).toHaveBeenCalled();
     });
   });
+
+  describe('uploadBookCover', () => {
+    it('should call unsupportedMediaType method', async () => {
+      await uploadBookCover(
+        {
+          ...reqMock,
+          file() {
+            return { mimetype: 'text/plain', file: new PassThrough() };
+          },
+        } as unknown as ReqMock,
+        repMock,
+      );
+
+      expect(repMock.unsupportedMediaType).toHaveBeenCalled();
+    });
+
+    it('should call notFound method', async () => {
+      await uploadBookCover(
+        { ...reqMock, params: { isbn: '1234567890123' } },
+        repMock,
+      );
+
+      expect(repMock.notFound).toHaveBeenCalled();
+    });
+
+    it('should call payloadTooLarge method', async () => {
+      await uploadBookCover(
+        {
+          ...reqMock,
+          file() {
+            return {
+              mimetype: 'image/gif',
+              file: { truncated: true },
+            };
+          },
+        } as unknown as ReqMock,
+        repMock,
+      );
+
+      expect(repMock.payloadTooLarge).toHaveBeenCalled();
+    });
+
+    it('should upload book cover', async () => {
+      await uploadBookCover(reqMock, repMock);
+
+      expect(repMock.code).toHaveBeenCalledWith(204);
+    });
+  });
 });
+
+type ReqMock = FastifyRequest<{
+  Params: { isbn: string };
+  Body: z.infer<typeof booksSchema.create.schema.body> &
+    z.infer<typeof booksSchema.update.schema.body>;
+}>;

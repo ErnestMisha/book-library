@@ -7,9 +7,16 @@ import {
 import { getHelpers } from '../helpers';
 import { Book } from '@book-library/shared';
 import { books } from '../../app/database';
+import formAutoContent from 'form-auto-content';
 
 suite('/books route', async () => {
-  const { clearDb, seedDb } = await getHelpers();
+  const {
+    clearDb,
+    seedDb,
+    restoreAssets,
+    getTooLargeCoverStream,
+    getNewCoverStream,
+  } = await getHelpers();
   const server = createServer()
     .setValidatorCompiler(validatorCompiler)
     .setSerializerCompiler(serializerCompiler)
@@ -36,7 +43,7 @@ suite('/books route', async () => {
           title,
           authors,
           edition,
-        }))
+        })),
       );
     });
   });
@@ -88,7 +95,7 @@ suite('/books route', async () => {
       expect(response.headers.location).toBe(`/books/${isbn}`);
     });
 
-    it('should respond 400 status code', async () => {
+    it('should respond with 400 status code', async () => {
       const response = await server.inject({
         method: 'POST',
         url: `/books`,
@@ -102,7 +109,7 @@ suite('/books route', async () => {
     });
   });
 
-  describe('PATCH /', () => {
+  describe('PATCH /:isbn', () => {
     it('should respond with 204 status code', async () => {
       const response = await server.inject({
         method: 'PATCH',
@@ -115,7 +122,7 @@ suite('/books route', async () => {
       expect(response.statusCode).toBe(204);
     });
 
-    it('should respond 404 status code', async () => {
+    it('should respond with 404 status code', async () => {
       const response = await server.inject({
         method: 'PATCH',
         url: `/books/1234567891234`,
@@ -127,7 +134,7 @@ suite('/books route', async () => {
       expect(response.statusCode).toBe(404);
     });
 
-    it('should respond 400 status code', async () => {
+    it('should respond with 400 status code', async () => {
       const response = await server.inject({
         method: 'PATCH',
         url: `/books/invalid-isbn`,
@@ -140,7 +147,11 @@ suite('/books route', async () => {
     });
   });
 
-  describe('DELETE /', () => {
+  describe('DELETE /:isbn', () => {
+    afterEach(async () => {
+      await restoreAssets();
+    });
+
     it('should respond with 204 status code', async () => {
       const response = await server.inject({
         method: 'DELETE',
@@ -150,7 +161,7 @@ suite('/books route', async () => {
       expect(response.statusCode).toBe(204);
     });
 
-    it('should respond 404 status code', async () => {
+    it('should respond with 404 status code', async () => {
       const response = await server.inject({
         method: 'DELETE',
         url: `/books/1234567891234`,
@@ -159,13 +170,52 @@ suite('/books route', async () => {
       expect(response.statusCode).toBe(404);
     });
 
-    it('should respond 400 status code', async () => {
+    it('should respond with 400 status code', async () => {
       const response = await server.inject({
         method: 'DELETE',
         url: `/books/invalid-isbn`,
       });
 
       expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /:isbn/cover', () => {
+    afterEach(async () => {
+      await restoreAssets();
+    });
+
+    it('should respond with 404 status code', async () => {
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/books/invalid-isbn/cover`,
+      });
+
+      expect(response.statusCode).toBe(400);
+    });
+
+    it('should respond with 413 status code', async () => {
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/books/${books.at(-2).isbn}/cover`,
+        ...formAutoContent({
+          file: getTooLargeCoverStream(),
+        }),
+      });
+
+      expect(response.statusCode).toBe(413);
+    });
+
+    it('should respond with 204 status code', async () => {
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/books/${books.at(-2).isbn}/cover`,
+        ...formAutoContent({
+          file: getNewCoverStream(),
+        }),
+      });
+
+      expect(response.statusCode).toBe(204);
     });
   });
 });

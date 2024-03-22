@@ -6,6 +6,11 @@ const books: FastifyPluginAsync = async (fastify, opts) => {
   fastify.post('/', fastify.schema.create, fastify.handlers.create);
   fastify.patch('/:isbn', fastify.schema.update, fastify.handlers.update);
   fastify.delete('/:isbn', fastify.schema.delete, fastify.handlers.delete);
+  fastify.put(
+    '/:isbn/cover',
+    fastify.schema.uploadBookCover,
+    fastify.handlers.uploadBookCover,
+  );
 };
 
 export default books;

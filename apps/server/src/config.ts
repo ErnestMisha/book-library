@@ -9,6 +9,8 @@ export const config = {
   mysqlPass: getEnv('MYSQL_PASSWORD'),
   mysqlDb: getEnv('MYSQL_DATABASE'),
   mysqlPort: Number(getEnv('MYSQL_PORT')),
+
+  fileSizeLimitKb: Number(getEnv('FILE_SIZE_LIMIT_KB')),
 };
 
 function getEnv(name: string) {

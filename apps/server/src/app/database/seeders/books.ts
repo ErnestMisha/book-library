@@ -9,6 +9,7 @@ export const books: Book[] = [
     length: 704,
     totalCount: 20,
     availableCount: 3,
+    coverExtension: 'jpg',
   },
   {
     title: `Python Crash Course, 3rd Edition: A Hands-On, Project-Based Introduction to Programming`,
@@ -18,6 +19,7 @@ export const books: Book[] = [
     length: 552,
     totalCount: 15,
     availableCount: 12,
+    coverExtension: 'jpg',
   },
   {
     title: `Linux Bible`,
@@ -27,6 +29,7 @@ export const books: Book[] = [
     length: 928,
     totalCount: 18,
     availableCount: 5,
+    coverExtension: 'jpg',
   },
   {
     title: `C Programming Language`,
@@ -36,6 +39,7 @@ export const books: Book[] = [
     length: 272,
     totalCount: 30,
     availableCount: 27,
+    coverExtension: 'jpg',
   },
   {
     title: `Computer Architecture: A Quantitative Approach`,
@@ -45,6 +49,7 @@ export const books: Book[] = [
     length: 936,
     totalCount: 8,
     availableCount: 7,
+    coverExtension: 'jpg',
   },
   {
     title: `Computer Networking: A Top-Down Approach`,
@@ -54,6 +59,7 @@ export const books: Book[] = [
     length: 864,
     totalCount: 10,
     availableCount: 3,
+    coverExtension: 'jpg',
   },
   {
     title: `Learning PHP, MySQL & JavaScript: A Step-by-Step Guide to Creating Dynamic Websites (Learning PHP, MYSQL, Javascript, CSS & HTML5)`,
@@ -63,6 +69,7 @@ export const books: Book[] = [
     length: 823,
     totalCount: 12,
     availableCount: 12,
+    coverExtension: 'jpg',
   },
   {
     title: `Docker: Up & Running: Shipping Reliable Containers in Production `,
@@ -72,14 +79,16 @@ export const books: Book[] = [
     length: 422,
     totalCount: 6,
     availableCount: 0,
+    coverExtension: 'jpg',
   },
   {
-    title: `Pro Git`,
-    authors: ['Scott Chacon', 'Ben Straub'],
-    isbn: 9781484200773,
+    title: `The Rust Programming Language, 2nd Edition`,
+    authors: ['Steve Klabnik', 'Carol Nichols'],
+    isbn: 9781718503106,
     edition: 2,
-    length: 521,
+    length: 560,
     totalCount: 14,
     availableCount: 5,
+    coverExtension: 'jpg',
   },
 ];

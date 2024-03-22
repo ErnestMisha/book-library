@@ -1,5 +1,6 @@
 import {
   getBookSchema,
+  createBookSchema,
   updateBookSchema,
   listBooksSchema,
 } from '@book-library/shared';
@@ -34,7 +35,7 @@ export const booksSchema = {
       description: 'creates book',
       tags: ['books'],
       additionalProperties: false,
-      body: getBookSchema,
+      body: createBookSchema,
       response: {
         201: z.object({
           isbn: z.number().int().min(1000000000000).max(9999999999999),
@@ -59,6 +60,16 @@ export const booksSchema = {
       description: 'deletes book with given isbn',
       tags: ['books'],
       additionalProperties: false,
+      params,
+      response: {
+        204: z.null(),
+      },
+    },
+  },
+  uploadBookCover: {
+    schema: {
+      description: 'upload book cover for given isbn',
+      tags: ['books'],
       params,
       response: {
         204: z.null(),
