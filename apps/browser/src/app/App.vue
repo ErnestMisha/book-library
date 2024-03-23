@@ -34,7 +34,7 @@ watchEffect(async () => {
         @change-theme="theme = theme == 'light' ? 'dark' : 'light'"
       />
       <main
-        class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         <BookCard v-for="book in books" :book :key="book.isbn" />
       </main>
