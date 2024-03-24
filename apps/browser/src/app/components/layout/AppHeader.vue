@@ -4,7 +4,7 @@ defineEmits(['changeTheme']);
 </script>
 <template>
   <header
-    class="mb-8 mt-4 flex w-full items-center justify-center text-lime-500"
+    class="mb-12 mt-4 flex w-full items-center justify-center text-lime-500"
   >
     <h1
       class="ml-auto flex items-center justify-center text-3xl md:text-4xl lg:text-6xl"
