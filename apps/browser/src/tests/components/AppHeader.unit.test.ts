@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
-import Header from '../../../app/components/layout/AppHeader.vue';
+import AppHeader from '../../app/components/AppHeader.vue';
 
-suite('Header component', () => {
-  it('should emit change-theme event', async () => {
-    const wrapper = mount(Header, {
+suite('AppHeader component', () => {
+  it('should emit changeTheme event', async () => {
+    const wrapper = mount(AppHeader, {
       props: { theme: 'light' },
     });
 

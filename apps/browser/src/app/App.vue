@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import AppHeader from './components/layout/AppHeader.vue';
-import BookCard from './components/layout/BookCard.vue';
+import AppHeader from './components/AppHeader.vue';
+import BookCard from './components/BookCard.vue';
 import { ref, watch, watchEffect } from 'vue';
 import { BookListElement } from '@book-library/shared';
+import BookModal from './components/BookModal.vue';
 
 const theme = ref<'light' | 'dark'>(
   (localStorage.getItem('theme') as 'light' | 'dark') ||
@@ -12,6 +13,10 @@ const theme = ref<'light' | 'dark'>(
 );
 const books = ref<BookListElement[]>();
 const loading = ref(false);
+const modal = ref({
+  show: false,
+  isbn: 0,
+});
 
 watch(theme, () => {
   localStorage.setItem('theme', theme.value);
@@ -27,7 +32,9 @@ watchEffect(async () => {
 
 <template>
   <div :class="theme">
-    <article class="min-h-dvh bg-lime-50 p-4 lg:p-6 dark:bg-stone-900">
+    <article
+      class="min-h-dvh bg-lime-50 p-4 lg:p-6 dark:bg-stone-900 dark:text-white"
+    >
       <AppHeader
         :theme="theme"
         @change-theme="theme = theme == 'light' ? 'dark' : 'light'"
@@ -42,8 +49,24 @@ watchEffect(async () => {
         v-else
         class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
-        <BookCard v-for="book in books" :book :key="book.isbn" />
+        <BookCard
+          v-for="book in books"
+          :book
+          :key="book.isbn"
+          class="cursor-pointer"
+          @click="
+            () => {
+              modal.show = true;
+              modal.isbn = book.isbn;
+            }
+          "
+        />
       </main>
+      <BookModal
+        v-if="modal.show"
+        :isbn="modal.isbn"
+        @close-modal="modal.show = false"
+      />
     </article>
   </div>
 </template>

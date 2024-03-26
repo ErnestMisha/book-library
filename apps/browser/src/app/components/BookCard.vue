@@ -4,7 +4,7 @@ defineProps<{ book: BookListElement }>();
 </script>
 <template>
   <section
-    class="flex flex-col rounded-md bg-lime-100 shadow-lg shadow-stone-500 dark:bg-stone-800 dark:text-white dark:shadow-lime-500"
+    class="flex flex-col rounded-md bg-lime-100 shadow-lg shadow-stone-500 dark:bg-stone-800 dark:shadow-lime-500"
   >
     <div class="h-3/4 2xl:h-5/6">
       <img
