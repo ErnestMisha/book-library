@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import { Book } from '@book-library/shared';
-import { ref, watchEffect, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useFetch } from '../composables';
 
-const emit = defineEmits(['closeModal']);
+defineEmits(['closeModal']);
 const { isbn } = defineProps<{ isbn: Book['isbn'] }>();
 
-const book = ref<Book>();
-const loading = ref(false);
+const book = useFetch<Book>(`/books/${isbn}`);
 const closeButton = ref();
 
-watchEffect(async () => {
-  loading.value = true;
-  book.value = await fetch(`/books/${isbn}`).then(
-    (res): Promise<Book> => res.json(),
-  );
-  loading.value = false;
-});
 onMounted(() => {
   closeButton.value.focus();
 });
@@ -26,7 +19,7 @@ onMounted(() => {
     @click="$emit('closeModal')"
   >
     <i
-      v-if="loading"
+      v-if="!book"
       class="pi pi-cog pi-spin text-2xl text-lime-500 lg:text-4xl"
     />
     <article
