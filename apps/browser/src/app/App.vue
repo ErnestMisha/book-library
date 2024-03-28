@@ -1,32 +1,16 @@
 <script setup lang="ts">
 import AppHeader from './components/AppHeader.vue';
 import BookCard from './components/BookCard.vue';
-import { ref, watch, watchEffect } from 'vue';
+import { ref } from 'vue';
 import { BookListElement } from '@book-library/shared';
 import BookModal from './components/BookModal.vue';
+import { useTheme, useFetch } from './composables';
 
-const theme = ref<'light' | 'dark'>(
-  (localStorage.getItem('theme') as 'light' | 'dark') ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light'),
-);
-const books = ref<BookListElement[]>();
-const loading = ref(false);
+const { theme, changeTheme } = useTheme();
+const books = useFetch<BookListElement[]>('/books');
 const modal = ref({
   show: false,
   isbn: 0,
-});
-
-watch(theme, () => {
-  localStorage.setItem('theme', theme.value);
-});
-watchEffect(async () => {
-  loading.value = true;
-  books.value = await fetch('/books').then(
-    (res): Promise<BookListElement[]> => res.json(),
-  );
-  loading.value = false;
 });
 </script>
 
@@ -37,10 +21,10 @@ watchEffect(async () => {
     >
       <AppHeader
         :theme="theme"
-        @change-theme="theme = theme == 'light' ? 'dark' : 'light'"
+        @change-theme="changeTheme(theme == 'light' ? 'dark' : 'light')"
       />
       <main
-        v-if="loading"
+        v-if="!books"
         class="absolute left-1/2 top-1/2 content-center justify-center text-center"
       >
         <i class="pi pi-cog pi-spin text-2xl text-lime-500 lg:text-4xl" />
