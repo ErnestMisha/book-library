@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { Book } from '@book-library/shared';
-import { ref, onMounted } from 'vue';
 import { useFetch } from '../composables';
 
 defineEmits(['closeModal']);
 const { isbn } = defineProps<{ isbn: Book['isbn'] }>();
 
 const book = useFetch<Book>(`/books/${isbn}`);
-const closeButton = ref();
-
-onMounted(() => {
-  closeButton.value.focus();
-});
 </script>
 <template>
   <div
@@ -46,6 +40,6 @@ onMounted(() => {
         </div>
       </div>
     </article>
-    <button ref="closeButton" @keyup.esc="$emit('closeModal')" />
+    <button @keyup.esc="$emit('closeModal')" v-focus />
   </div>
 </template>
