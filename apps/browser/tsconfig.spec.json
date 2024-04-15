@@ -10,5 +10,9 @@
       "vitest"
     ]
   },
-  "include": ["src/tests"]
+  "include": [
+    "src/tests",
+    "src/tests/views/BookModal.unit.test.ts",
+    "../../AppHeader.unit.test.ts"
+  ]
 }

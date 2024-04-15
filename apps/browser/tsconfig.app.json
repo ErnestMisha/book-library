@@ -5,5 +5,12 @@
     "types": ["vite/client"]
   },
   "exclude": ["src/tests"],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.vue"]
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/tests/views/BookModal.unit.test.ts",
+    "../../AppHeader.unit.test.ts"
+  ]
 }

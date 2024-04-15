@@ -10,7 +10,7 @@ defineProps<{ book: BookListElement }>();
       <img
         :src="`/books/cover/${book.isbn}.${book.coverExtension}`"
         alt="book cover image 😢"
-        class="size-full rounded-t-md"
+        class="flex size-full items-center justify-center rounded-t-md"
       />
     </div>
     <div class="flex flex-grow flex-col justify-between p-4">
