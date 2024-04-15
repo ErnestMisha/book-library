@@ -1,17 +1,31 @@
 <script setup lang="ts">
-import AppHeader from './components/AppHeader.vue';
-import BookCard from './components/BookCard.vue';
+import AppHeader from './components/layouts/AppHeader.vue';
+import BookCard from './components/layouts/BookCard.vue';
 import { ref } from 'vue';
 import { BookListElement } from '@book-library/shared';
-import BookModal from './components/BookModal.vue';
+import BookDetails from './views/BookDetails.vue';
+import AddBook from './views/AddBook.vue';
 import { useTheme, useFetch } from './composables';
+import Loader from './components/layouts/Loader.vue';
 
 const { theme, changeTheme } = useTheme();
-const books = useFetch<BookListElement[]>('/books');
-const modal = ref({
-  show: false,
-  isbn: 0,
-});
+const { data, refetch } = useFetch<BookListElement[]>('/books');
+const currView = ref<'BookDetails' | 'AddBook'>();
+const views = {
+  BookDetails,
+  AddBook,
+};
+const isbn = ref<number>();
+
+function changeView(name: 'BookDetails' | 'AddBook', newIsbn?: number) {
+  currView.value = name;
+  isbn.value = newIsbn;
+}
+
+async function closeModal() {
+  currView.value = undefined;
+  await refetch();
+}
 </script>
 
 <template>
@@ -22,34 +36,31 @@ const modal = ref({
       <AppHeader
         :theme="theme"
         @change-theme="changeTheme(theme == 'light' ? 'dark' : 'light')"
+        @add-book="changeView('AddBook')"
       />
       <main
-        v-if="!books"
+        v-if="!data"
         class="absolute left-1/2 top-1/2 content-center justify-center text-center"
       >
-        <i class="pi pi-cog pi-spin text-2xl text-lime-500 lg:text-4xl" />
+        <Loader />
       </main>
       <main
         v-else
         class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         <BookCard
-          v-for="book in books"
+          v-for="book in data"
           :book
           :key="book.isbn"
           class="cursor-pointer"
-          @click="
-            () => {
-              modal.show = true;
-              modal.isbn = book.isbn;
-            }
-          "
+          @click="changeView('BookDetails', book.isbn)"
         />
       </main>
-      <BookModal
-        v-if="modal.show"
-        :isbn="modal.isbn"
-        @close-modal="modal.show = false"
+      <component
+        v-if="currView"
+        :is="views[currView]"
+        :isbn
+        @close-modal="closeModal"
       />
     </article>
   </div>
