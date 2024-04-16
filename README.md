@@ -12,7 +12,7 @@ You must have following software installed on your machine:
 
 ## Repository structure
 
-This repository is structured as a monorepo, thanks to pnpm workspace feature. It consists of three main parts:
+This repository is structured as a [nx](https://nx.dev/) monorepo. It consists of three main parts:
 
 - [server](apps/server/README.md)
 - [browser](apps/browser/README.md)
