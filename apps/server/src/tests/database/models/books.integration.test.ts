@@ -15,7 +15,7 @@ suite('Books model', async () => {
   it('should return list of all books', async () => {
     const list = await model.list();
 
-    expect(list).toHaveLength(9);
+    expect(list).toHaveLength(16);
     for (const book of list) {
       expect(book).toHaveProperty('isbn');
       expect(book).toHaveProperty('title');
