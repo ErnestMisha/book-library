@@ -14,7 +14,7 @@ suite('useValidate', () => {
     });
 
     expect(errors.value).toMatchObject({
-      isbn: 'Required',
+      isbn: 'Expected number, received nan',
       cover: 'Required',
     });
   });
