@@ -6,7 +6,7 @@ import { config } from '../../config';
 export default fp(async (fastify, opts) => {
   const model = new Books();
   await model.connect();
-  const count = await model.list();
+  const count = await model.list(1, 0);
 
   if (config.environment === 'development' && !count.length) {
     await model.seedData(books);

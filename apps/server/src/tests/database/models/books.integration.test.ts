@@ -6,22 +6,31 @@ suite('Books model', async () => {
   const { getBook, clearDb, seedDb } = await getHelpers();
   const model = new Books();
   await model.connect();
+  const bookList = books
+    .map(({ isbn, title, authors, edition }) => ({
+      isbn,
+      title,
+      authors,
+      edition,
+    }))
+    .sort((prev, next) => prev.isbn - next.isbn);
 
   beforeEach(async () => {
     await clearDb();
     await seedDb();
   });
 
-  it('should return list of all books', async () => {
-    const list = await model.list();
+  it('should return sorted lists of books', async () => {
+    const listOne = await model.list(6, 0);
+    const listTwo = await model.list(6, 6);
+    const listThree = await model.list(6, 12);
 
-    expect(list).toHaveLength(16);
-    for (const book of list) {
-      expect(book).toHaveProperty('isbn');
-      expect(book).toHaveProperty('title');
-      expect(book).toHaveProperty('authors');
-      expect(book).toHaveProperty('edition');
-    }
+    expect(listOne).toHaveLength(6);
+    expect(listOne).toMatchObject(bookList.slice(0, 6));
+    expect(listTwo).toHaveLength(6);
+    expect(listTwo).toMatchObject(bookList.slice(6, 12));
+    expect(listThree).toHaveLength(4);
+    expect(listThree).toMatchObject(bookList.slice(12));
   });
 
   it('should return book with given isbn', async () => {
