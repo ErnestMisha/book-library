@@ -42,10 +42,13 @@ export class Books {
     await this.collection.add(data).execute();
   }
 
-  async list() {
+  async list(limit: number, offset: number) {
     return this.collection
       .find()
-      .fields(Object.keys(listBooksSchema.element.shape))
+      .sort('isbn ASC')
+      .limit(limit)
+      .offset(offset)
+      .fields(Object.keys(listBooksSchema.shape.books.element.shape))
       .execute()
       .then((res) => res.fetchAll());
   }

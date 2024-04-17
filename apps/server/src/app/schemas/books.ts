@@ -6,14 +6,13 @@ import {
 } from '@book-library/shared';
 import z from 'zod';
 
-const params = z.object({ isbn: z.string().length(13) });
-
 export const booksSchema = {
   list: {
     schema: {
       description: 'returns list of books isbn',
       tags: ['books'],
       additionalProperties: false,
+      querystring: listBooksSchema.pick({ limit: true, offset: true }),
       response: {
         200: listBooksSchema,
       },
@@ -24,7 +23,7 @@ export const booksSchema = {
       description: 'returns book with given isbn',
       tags: ['books'],
       additionalProperties: false,
-      params,
+      params: listBooksSchema.shape.books.element.pick({ isbn: true }),
       response: {
         200: getBookSchema,
       },
@@ -37,9 +36,7 @@ export const booksSchema = {
       additionalProperties: false,
       body: createBookSchema,
       response: {
-        201: z.object({
-          isbn: z.number().int().min(1000000000000).max(9999999999999),
-        }),
+        201: listBooksSchema.shape.books.element.pick({ isbn: true }),
       },
     },
   },
@@ -49,7 +46,7 @@ export const booksSchema = {
       tags: ['books'],
       additionalProperties: false,
       body: updateBookSchema,
-      params,
+      params: listBooksSchema.shape.books.element.pick({ isbn: true }),
       response: {
         204: z.null(),
       },
@@ -60,7 +57,7 @@ export const booksSchema = {
       description: 'deletes book with given isbn',
       tags: ['books'],
       additionalProperties: false,
-      params,
+      params: listBooksSchema.shape.books.element.pick({ isbn: true }),
       response: {
         204: z.null(),
       },
@@ -70,7 +67,7 @@ export const booksSchema = {
     schema: {
       description: 'upload book cover for given isbn',
       tags: ['books'],
-      params,
+      params: listBooksSchema.shape.books.element.pick({ isbn: true }),
       response: {
         204: z.null(),
       },

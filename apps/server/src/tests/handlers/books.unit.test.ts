@@ -21,6 +21,7 @@ suite('Books handlers', () => {
   const reqMock = {
     params: books[0],
     body: books[0],
+    query: { limit: 20, offset: 0 },
     file() {
       return { mimetype: 'image/webp', file: new PassThrough() };
     },
@@ -59,7 +60,9 @@ suite('Books handlers', () => {
     it('should return list of books', async () => {
       const res = await list(reqMock, repMock);
 
-      expect(res).toMatchObject(books);
+      expect(res.limit).toBe(reqMock.query.limit);
+      expect(res.offset).toBe(reqMock.query.offset);
+      expect(res.books).toMatchObject(books);
     });
   });
 
@@ -71,7 +74,7 @@ suite('Books handlers', () => {
     });
 
     it('should call notFound method', async () => {
-      await get({ ...reqMock, params: { isbn: '123456789123' } }, repMock);
+      await get({ ...reqMock, params: { isbn: 123456789123 } }, repMock);
 
       expect(repMock.notFound).toHaveBeenCalled();
     });
@@ -136,7 +139,7 @@ suite('Books handlers', () => {
 
     it('should call notFound method', async () => {
       await update(
-        { ...reqMock, params: { ...reqMock.params, isbn: '123456789123' } },
+        { ...reqMock, params: { ...reqMock.params, isbn: 123456789123 } },
         repMock,
       );
 
@@ -153,7 +156,7 @@ suite('Books handlers', () => {
 
     it('should call notFound method', async () => {
       await remove(
-        { ...reqMock, params: { ...reqMock.params, isbn: '123456789123' } },
+        { ...reqMock, params: { ...reqMock.params, isbn: 123456789123 } },
         repMock,
       );
 
@@ -178,7 +181,7 @@ suite('Books handlers', () => {
 
     it('should call notFound method', async () => {
       await uploadBookCover(
-        { ...reqMock, params: { isbn: '1234567890123' } },
+        { ...reqMock, params: { isbn: 1234567890123 } },
         repMock,
       );
 
@@ -211,7 +214,8 @@ suite('Books handlers', () => {
 });
 
 type ReqMock = FastifyRequest<{
-  Params: { isbn: string };
+  Params: { isbn: number };
   Body: z.infer<typeof booksSchema.create.schema.body> &
     z.infer<typeof booksSchema.update.schema.body>;
+  Querystring: z.infer<typeof booksSchema.list.schema.querystring>;
 }>;

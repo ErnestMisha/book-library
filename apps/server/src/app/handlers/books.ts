@@ -10,11 +10,17 @@ export function getHandlers(model: Books): Handlers {
 
   return {
     async list(req, rep) {
-      return model.list();
+      const { limit, offset } = req.query;
+
+      return {
+        books: await model.list(limit, offset),
+        limit,
+        offset,
+      };
     },
 
     async get(req, rep) {
-      const book = await model.get(Number(req.params.isbn));
+      const book = await model.get(req.params.isbn);
 
       return book ? book : rep.notFound();
     },
@@ -37,7 +43,7 @@ export function getHandlers(model: Books): Handlers {
         return rep.badRequest();
       }
 
-      const isbn = Number(req.params.isbn);
+      const { isbn } = req.params;
       const book = await model.get(isbn);
 
       if (!book) {
@@ -50,7 +56,7 @@ export function getHandlers(model: Books): Handlers {
     },
 
     async delete(req, rep) {
-      const isbn = Number(req.params.isbn);
+      const { isbn } = req.params;
 
       const coverExtension = await model.selectCoverExtension(isbn);
 
@@ -78,7 +84,7 @@ export function getHandlers(model: Books): Handlers {
       const fileType = mimetype.split('/').at(-1);
       const filePath = join(assetsPath, `${isbn}.${fileType}`);
 
-      const book = await model.get(Number(isbn));
+      const book = await model.get(isbn);
 
       if (!book) {
         return rep.notFound();
@@ -91,10 +97,11 @@ export function getHandlers(model: Books): Handlers {
         return rep.payloadTooLarge();
       }
 
-      await model.saveCoverExtension(Number(isbn), fileType);
+      await model.saveCoverExtension(isbn, fileType);
 
       const coversToDelete = (await readdir(assetsPath)).filter(
-        (cover) => cover.startsWith(isbn) && cover !== `${isbn}.${fileType}`,
+        (cover) =>
+          cover.startsWith(isbn.toString()) && cover !== `${isbn}.${fileType}`,
       );
 
       for (const cover of coversToDelete) {

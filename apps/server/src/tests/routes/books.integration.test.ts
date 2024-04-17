@@ -31,20 +31,24 @@ suite('/books route', async () => {
     it('should respond with list of books', async () => {
       const response = await server.inject({
         method: 'GET',
-        url: '/books',
+        url: '/books?limit=20&offset=0',
       });
 
       const data = response.json<Book[]>();
 
       expect(response.statusCode).toBe(200);
-      expect(data).toMatchObject(
-        books.map(({ isbn, title, authors, edition }) => ({
-          isbn,
-          title,
-          authors,
-          edition,
-        })),
-      );
+      expect(data).toMatchObject({
+        books: books
+          .map(({ isbn, title, authors, edition }) => ({
+            isbn,
+            title,
+            authors,
+            edition,
+          }))
+          .sort((prev, next) => prev.isbn - next.isbn),
+        limit: 20,
+        offset: 0,
+      });
     });
   });
 

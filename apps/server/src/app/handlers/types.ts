@@ -4,7 +4,9 @@ import { z } from 'zod';
 
 export type Handlers = {
   list(
-    req: FastifyRequest,
+    req: FastifyRequest<{
+      Querystring: z.infer<typeof booksSchema.list.schema.querystring>;
+    }>,
     rep: FastifyReply,
   ): Promise<z.infer<(typeof booksSchema.list.schema.response)['200']>>;
   get(
