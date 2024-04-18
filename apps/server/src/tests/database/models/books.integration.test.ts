@@ -21,16 +21,19 @@ suite('Books model', async () => {
   });
 
   it('should return sorted lists of books', async () => {
-    const listOne = await model.list(6, 0);
-    const listTwo = await model.list(6, 6);
-    const listThree = await model.list(6, 12);
+    const [listOne, countOne] = await model.list(6, 0);
+    const [listTwo, countTwo] = await model.list(6, 6);
+    const [listThree, countThree] = await model.list(6, 12);
 
     expect(listOne).toHaveLength(6);
     expect(listOne).toMatchObject(bookList.slice(0, 6));
+    expect(countOne).toBe(bookList.length);
     expect(listTwo).toHaveLength(6);
     expect(listTwo).toMatchObject(bookList.slice(6, 12));
+    expect(countTwo).toBe(bookList.length);
     expect(listThree).toHaveLength(4);
     expect(listThree).toMatchObject(bookList.slice(12));
+    expect(countThree).toBe(bookList.length);
   });
 
   it('should return book with given isbn', async () => {

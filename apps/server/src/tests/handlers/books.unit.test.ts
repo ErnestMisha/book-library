@@ -8,7 +8,7 @@ import { PassThrough } from 'stream';
 
 suite('Books handlers', () => {
   const modelMock = {
-    list: vi.fn(() => books),
+    list: vi.fn(() => [books, books.length]),
     get: vi.fn((isbn: number) => books.find((book) => book.isbn === isbn)),
     create: vi.fn(),
     update: vi.fn(),
@@ -60,7 +60,7 @@ suite('Books handlers', () => {
     it('should return list of books', async () => {
       const res = await list(reqMock, repMock);
 
-      expect(res.limit).toBe(reqMock.query.limit);
+      expect(res.totalCount).toBe(books.length);
       expect(res.offset).toBe(reqMock.query.offset);
       expect(res.books).toMatchObject(books);
     });

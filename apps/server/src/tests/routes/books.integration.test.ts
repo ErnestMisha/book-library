@@ -46,7 +46,7 @@ suite('/books route', async () => {
             edition,
           }))
           .sort((prev, next) => prev.isbn - next.isbn),
-        limit: 20,
+        totalCount: books.length,
         offset: 0,
       });
     });

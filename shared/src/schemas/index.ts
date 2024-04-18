@@ -26,8 +26,8 @@ export const listBooksSchema = z.object({
       coverExtension: z.string().min(2).max(10).nullable(),
     }),
   ),
-  limit: z.coerce.number().int().min(0).max(100),
   offset: z.coerce.number().int().min(0),
+  totalCount: z.number().int().min(0),
 });
 
 export const getBookSchema = listBooksSchema.shape.books.element.extend({
