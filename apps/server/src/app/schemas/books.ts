@@ -12,7 +12,9 @@ export const booksSchema = {
       description: 'returns list of books isbn',
       tags: ['books'],
       additionalProperties: false,
-      querystring: listBooksSchema.pick({ limit: true, offset: true }),
+      querystring: listBooksSchema
+        .pick({ offset: true })
+        .extend({ limit: z.coerce.number().int().min(0).max(100) }),
       response: {
         200: listBooksSchema,
       },

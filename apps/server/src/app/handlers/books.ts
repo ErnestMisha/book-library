@@ -12,9 +12,11 @@ export function getHandlers(model: Books): Handlers {
     async list(req, rep) {
       const { limit, offset } = req.query;
 
+      const [books, totalCount] = await model.list(limit, offset);
+
       return {
-        books: await model.list(limit, offset),
-        limit,
+        books,
+        totalCount,
         offset,
       };
     },

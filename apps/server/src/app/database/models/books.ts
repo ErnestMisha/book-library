@@ -43,7 +43,7 @@ export class Books {
   }
 
   async list(limit: number, offset: number) {
-    return this.collection
+    const list = this.collection
       .find()
       .sort('isbn ASC')
       .limit(limit)
@@ -51,6 +51,9 @@ export class Books {
       .fields(Object.keys(listBooksSchema.shape.books.element.shape))
       .execute()
       .then((res) => res.fetchAll());
+    const count = this.collection.count();
+
+    return Promise.all([list, count]);
   }
 
   async get(isbn: number) {
