@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import AppHeader from './components/layouts/AppHeader.vue';
 import BookCard from './components/layouts/BookCard.vue';
-import { ref } from 'vue';
-import { BookListElement } from '@book-library/shared';
+import { computed, ref } from 'vue';
 import BookDetails from './views/BookDetails.vue';
 import AddBook from './views/AddBook.vue';
-import { useTheme, useFetch } from './composables';
+import { useTheme, useFetchBooks } from './composables';
 import Loader from './components/layouts/Loader.vue';
 
+const offset = ref(0);
 const { theme, changeTheme } = useTheme();
-const { data, refetch } = useFetch<BookListElement[]>('/books');
+const { books, prevPage, nextPage, refetch } = useFetchBooks(
+  computed(() => `/books?limit=12&offset=${offset.value}`),
+);
 const currView = ref<'BookDetails' | 'AddBook'>();
 const views = {
   BookDetails,
@@ -35,11 +37,15 @@ async function closeModal() {
     >
       <AppHeader
         :theme="theme"
+        :prev-page="prevPage!"
+        :next-page="nextPage!"
+        @prev-page="offset -= 12"
+        @next-page="offset += 12"
         @change-theme="changeTheme(theme == 'light' ? 'dark' : 'light')"
         @add-book="changeView('AddBook')"
       />
       <main
-        v-if="!data"
+        v-if="!books"
         class="absolute left-1/2 top-1/2 content-center justify-center text-center"
       >
         <Loader />
@@ -49,7 +55,7 @@ async function closeModal() {
         class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
         <BookCard
-          v-for="book in data"
+          v-for="book in books"
           :book
           :key="book.isbn"
           class="cursor-pointer"

@@ -25,11 +25,13 @@ suite('App component', () => {
   );
   vi.stubGlobal(
     'fetch',
-    vi.fn((url) =>
-      url === '/books'
+    vi.fn((url: string) =>
+      url.startsWith('/books?')
         ? Promise.resolve({
             json: () => ({
-              book,
+              books: [book],
+              offset: 0,
+              totalCount: 1,
             }),
           })
         : Promise.resolve({ json: () => book }),
@@ -55,7 +57,7 @@ suite('App component', () => {
     expect(wrapper.findComponent(Loader).exists()).toBeTruthy();
 
     await flushPromises();
-    await wrapper.find('#add-book-button').trigger('click');
+    await wrapper.find('.pi-plus').trigger('click');
 
     expect(wrapper.findComponent(AddBook).exists()).toBeTruthy();
     expect(wrapper.findComponent(Loader).exists()).toBeFalsy();
