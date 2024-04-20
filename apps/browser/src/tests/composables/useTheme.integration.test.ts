@@ -12,9 +12,9 @@ suite('useTheme', () => {
   it('should set localStorage theme item', async () => {
     const { theme, changeTheme } = useTheme();
 
-    expect(window.localStorage).toHaveLength(0);
+    expect(localStorage).toHaveLength(0);
     changeTheme('dark');
     await nextTick();
-    expect(window.localStorage.getItem('theme')).toBe('dark');
+    expect(localStorage.getItem('theme')).toBe('dark');
   });
 });

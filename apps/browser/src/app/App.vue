@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import AppHeader from './components/layouts/AppHeader.vue';
 import BookCard from './components/layouts/BookCard.vue';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import BookDetails from './views/BookDetails.vue';
 import AddBook from './views/AddBook.vue';
 import { useTheme, useFetchBooks } from './composables';
 import Loader from './components/layouts/Loader.vue';
+import ActionButton from './components/interfaces/ActionButton.vue';
 
 const offset = ref(0);
 const { theme, changeTheme } = useTheme();
@@ -18,6 +19,7 @@ const views = {
   AddBook,
 };
 const isbn = ref<number>();
+const scrollUpButton = ref(false);
 
 function changeView(name: 'BookDetails' | 'AddBook', newIsbn?: number) {
   currView.value = name;
@@ -28,6 +30,23 @@ async function closeModal() {
   currView.value = undefined;
   await refetch();
 }
+
+function scrollUp() {
+  scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+}
+
+onMounted(() => {
+  addEventListener('scroll', (event) => {
+    if (scrollY > 200) {
+      scrollUpButton.value = true;
+    } else {
+      scrollUpButton.value = false;
+    }
+  });
+});
 </script>
 
 <template>
@@ -60,6 +79,11 @@ async function closeModal() {
           :key="book.isbn"
           class="cursor-pointer"
           @click="changeView('BookDetails', book.isbn)"
+        />
+        <ActionButton
+          v-show="scrollUpButton"
+          class="pi-arrow-up fixed bottom-2 right-2 bg-lime-500 text-lime-50 dark:text-stone-900"
+          @click="scrollUp"
         />
       </main>
       <component

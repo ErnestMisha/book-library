@@ -14,8 +14,8 @@ function emitClose(e: KeyboardEvent) {
   }
 }
 
-onMounted(() => window.addEventListener('keyup', emitClose));
-onUnmounted(() => window.removeEventListener('keyup', emitClose));
+onMounted(() => addEventListener('keyup', emitClose));
+onUnmounted(() => removeEventListener('keyup', emitClose));
 </script>
 <template>
   <div
