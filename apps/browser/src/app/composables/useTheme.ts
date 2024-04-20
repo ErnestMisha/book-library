@@ -3,9 +3,7 @@ import { ref, watch } from 'vue';
 export function useTheme() {
   const theme = ref<'light' | 'dark'>(
     (localStorage.getItem('theme') as 'light' | 'dark') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'),
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   );
 
   watch(theme, () => {
