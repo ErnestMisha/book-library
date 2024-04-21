@@ -24,6 +24,7 @@ export function useSubmit() {
     });
 
     if (!bookRes.ok) {
+      await fetch(`/books/${book.isbn}`, { method: 'DELETE' });
       status.value = SubmitStatus.Error;
       return;
     }
@@ -37,6 +38,7 @@ export function useSubmit() {
     });
 
     if (!coverRes.ok) {
+      await fetch(`/books/${book.isbn}`, { method: 'DELETE' });
       status.value = SubmitStatus.Error;
       return;
     }

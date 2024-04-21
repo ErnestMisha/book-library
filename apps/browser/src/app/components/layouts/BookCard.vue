@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { BookListElement } from '@book-library/shared';
+import ActionButton from '../interfaces/ActionButton.vue';
 defineProps<{ book: BookListElement }>();
+defineEmits(['delete']);
 </script>
 <template>
   <section
-    class="flex flex-col rounded-md bg-lime-100 shadow-lg shadow-stone-500 dark:bg-stone-800 dark:shadow-lime-500"
+    class="relative flex flex-col rounded-md bg-lime-100 shadow-lg shadow-stone-500 dark:bg-stone-800 dark:shadow-lime-500"
   >
     <div class="h-3/4 2xl:h-5/6">
       <img
@@ -22,5 +24,9 @@ defineProps<{ book: BookListElement }>();
         <p>Edition: {{ book.edition }}</p>
       </div>
     </div>
+    <ActionButton
+      class="pi-trash absolute bottom-2 right-2"
+      @click.stop="$emit('delete')"
+    />
   </section>
 </template>

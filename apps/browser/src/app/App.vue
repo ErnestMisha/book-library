@@ -38,6 +38,11 @@ function scrollUp() {
   });
 }
 
+async function deleteBook(isbn: number) {
+  await fetch(`/books/${isbn}`, { method: 'DELETE' });
+  await refetch();
+}
+
 onMounted(() => {
   addEventListener('scroll', (event) => {
     if (scrollY > 200) {
@@ -79,6 +84,7 @@ onMounted(() => {
           :key="book.isbn"
           class="cursor-pointer"
           @click="changeView('BookDetails', book.isbn)"
+          @delete="deleteBook(book.isbn)"
         />
         <ActionButton
           v-show="scrollUpButton"
