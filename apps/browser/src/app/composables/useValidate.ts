@@ -24,6 +24,8 @@ export function useValidate() {
       errors.value.cover = 'Required';
     } else if (!cover.type.startsWith('image')) {
       errors.value.cover = 'Invalid file type';
+    } else if (cover.size > 500 * 1024) {
+      errors.value.cover = 'Cover image size is too large (max 500KB)';
     }
   }
 

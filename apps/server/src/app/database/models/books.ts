@@ -76,7 +76,7 @@ export class Books {
       query.set('totalCount', book.totalCount);
     }
 
-    if (book.availableCount) {
+    if (book.availableCount >= 0) {
       query.set('availableCount', book.availableCount);
     }
 

@@ -25,7 +25,7 @@ onUnmounted(() => removeEventListener('keyup', emitClose));
     <Loader v-if="loading" />
     <article
       v-else
-      class="m-auto flex w-[50rem] flex-col break-words rounded-md bg-white outline outline-1 outline-lime-500 lg:h-[95%] dark:bg-black"
+      class="m-auto flex w-[40rem] flex-col break-words rounded-md bg-white outline outline-1 outline-lime-500 dark:bg-black"
       @click.stop
       v-bind="$attrs"
     >
